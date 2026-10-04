@@ -1,0 +1,22 @@
+---
+/** 404 page (GitHub Pages serves dist/404.html automatically). */
+import Base from '../layouts/Base.astro';
+import { notFound } from '../data/content';
+
+const t = notFound;
+---
+
+<Base title={t.seo.title} description={t.seo.description} path="/404" noindex>
+  <section class="section hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="stack stack--m measure">
+        <p class="eyebrow">{t.eyebrow}</p>
+        <h1 id="hero-title">{t.titleLead} <span class="mark">{t.titleMark}</span></h1>
+        <p class="lead">{t.lead}</p>
+        <div class="cluster">
+          <a class="btn btn--primary btn--lg" href="/">{t.cta}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

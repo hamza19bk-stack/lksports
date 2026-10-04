@@ -1,0 +1,108 @@
+/* =========================================================================
+   THÈME « STUDIO » — magazine éditorial, studio boutique
+   -------------------------------------------------------------------------
+   Base ivoire chaude, grands serifs (Instrument Serif) et italiques,
+   blocs de couleur pleine largeur teintés à partir de l'accent,
+   pied de page sur aplat sombre teinté.
+   La mise en forme propre à la variante est dans ./variants/studio.css
+   (tous les sélecteurs y sont préfixés par :root[data-design="studio"]).
+
+   CONTRAT DES ACCENTS : les 7 jetons --c-accent, --c-accent-bright,
+   --c-accent-dim, --c-accent-soft, --c-accent-2, --c-accent-2-soft et
+   --c-text-on-accent tiennent chacun sur UNE ligne (remplacés par script
+   pour chaque site). Ailleurs, toute couleur dérivée d'un accent passe par
+   var(--c-accent…) ou color-mix(in srgb, var(--c-accent) N%, …).
+   Contrôlé par `npm run check`.
+   ========================================================================= */
+
+/* ---- Polices auto-hébergées (« Instrument Serif » et « Instrument Sans Variable ») ---- */
+@import '@fontsource/instrument-serif';
+@import '@fontsource/instrument-serif/400-italic.css';
+@import '@fontsource-variable/instrument-sans';
+@import '@fontsource-variable/instrument-sans/wght-italic.css';
+@import './variants/studio.css';
+
+:root {
+  --color-scheme: light;
+
+  /* ---- Fonds et surfaces (opaques) ---- */
+  --c-bg:        #F6F1E8;   /* ivoire chaud */
+  --c-bg-deep:   #ECE4D6;   /* menu mobile */
+  --c-surface:   #FBF8F2;   /* encarts */
+  --c-surface-2: #EFE8DC;   /* puces, encarts secondaires */
+  --c-surface-3: #DDD1BF;   /* décor */
+
+  /* ---- Bordures et voiles ---- */
+  --c-border:        rgba(28, 25, 22, 0.13);
+  --c-border-strong: rgba(28, 25, 22, 0.32);
+  --c-overlay:       rgba(28, 25, 22, 0.04);
+  --c-overlay-alt:   color-mix(in srgb, var(--c-accent) 7%, transparent);
+  --c-grid-line:     rgba(28, 25, 22, 0.05);
+  --c-shadow:        rgba(28, 25, 22, 0.16);
+
+  /* ---- Textes ---- */
+  --c-text:           #1C1916;
+  --c-text-soft:      #413B34;
+  --c-text-muted:     #574F46;
+  --c-text-faint:     #8C8479;  /* décor uniquement */
+
+  /* ---- Accents (une ligne par jeton) ---- */
+  --c-accent: #9D174D;
+  --c-accent-bright: #7F123E;
+  --c-accent-dim: #CC8FA8;
+  --c-accent-soft: rgba(157, 23, 77, 0.09);
+  --c-accent-2: #065F46;
+  --c-accent-2-soft: rgba(6, 95, 70, 0.09);
+  --c-text-on-accent: #FFFFFF;
+
+  /* ---- Encre : aplat sombre du pied de page (teinté par l'accent dans studio.css) ---- */
+  --c-ink:        #1A1613;
+  --c-ink-text:   #F6F1E8;
+  --c-ink-soft:   #E2D9CC;
+  --c-ink-muted:  #C2B8AA;
+
+  /* ---- Halos (très discrets : la variante travaille en aplats) ---- */
+  --halo-1: var(--c-accent);
+  --halo-2: var(--c-accent-2);
+  --halo-strength: 0.35;
+
+  /* ---- Dégradés ---- */
+  --grad-accent:  linear-gradient(105deg, var(--c-accent) 0%, var(--c-accent-2) 100%);
+  --grad-surface: linear-gradient(transparent, transparent);
+  --grad-line:    linear-gradient(90deg, var(--c-border-strong), var(--c-border-strong));
+  --grad-visual:  linear-gradient(180deg, var(--c-surface), var(--c-surface-2));
+
+  /* ---- Ombres (quasi absentes : filets plutôt qu'ombres) ---- */
+  --shadow-xs: 0 1px 2px rgba(28, 25, 22, 0.05);
+  --shadow-s:  0 0 0 0 transparent;
+  --shadow-m:  0 18px 40px -28px rgba(28, 25, 22, 0.28);
+  --shadow-l:  0 30px 60px -36px rgba(28, 25, 22, 0.30);
+  --shadow-accent: 0 0 0 0 transparent;
+  --ring: 0 0 0 3px color-mix(in srgb, var(--c-accent) 30%, transparent);
+
+  /* ---- Impression ---- */
+  --c-print-bg:   #FFFFFF;
+  --c-print-text: #000000;
+
+  /* ---- Polices ---- */
+  --font-display: 'Instrument Serif', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --font-label: var(--font-body);     /* boutons, sur-titres, navigation */
+  --font-body: 'Instrument Sans Variable', 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  /* ---- Rayons (sobres ; pilules pour les boutons) ---- */
+  --radius-xs: 3px;
+  --radius-s: 6px;
+  --radius-m: 10px;
+  --radius-l: 14px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+  --radius-btn: var(--radius-pill);
+
+  /* ---- Variables de style ---- */
+  --heading-transform: none;
+  --heading-weight: 400;
+  --heading-tracking: -0.012em;
+  --display-leading: 0.94;
+  --label-transform: uppercase;
+}

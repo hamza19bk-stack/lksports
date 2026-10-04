@@ -1,0 +1,949 @@
+/* =========================================================================
+   VARIANTE « MONO » — minimalisme de luxe
+   -------------------------------------------------------------------------
+   Tous les sélecteurs sont préfixés par :root[data-design="mono"].
+   Ce fichier ne contient AUCUNE valeur littérale d'accent : toute couleur
+   dérivée passe par var(--c-…) ou color-mix().
+
+   Parti pris :
+   · blanc absolu, encre noire, filets d'un pixel, beaucoup de vide ;
+   · aucune carte, aucune ombre, aucun aplat, aucune grille visible ;
+   · display serif (Playfair) en très grand et très léger,
+     corps en Instrument Sans petit, sur-titres en capitales très espacées ;
+   · la couleur (--c-accent-2) n'apparaît que par touches minuscules :
+     le point du sur-titre, le soulignement d'un lien, l'onglet actif.
+   ========================================================================= */
+
+/* ------------------------------------------------------------- ÉCHELLES */
+
+:root[data-design='mono'] {
+  /* Typographie : écart maximal entre le display et le corps de texte. */
+  --step--2: clamp(0.72rem, 0.70rem + 0.10vw, 0.78rem);
+  --step--1: clamp(0.83rem, 0.80rem + 0.14vw, 0.91rem);
+  --step-0:  clamp(1rem, 0.97rem + 0.14vw, 1.08rem);
+  --step-1:  clamp(1.1rem, 1.05rem + 0.28vw, 1.27rem);
+  --step-2:  clamp(1.27rem, 1.16rem + 0.55vw, 1.6rem);
+  --step-3:  clamp(1.5rem, 1.28rem + 1.12vw, 2.18rem);
+  --step-4:  clamp(1.86rem, 1.42rem + 2.2vw, 3.2rem);
+  --step-5:  clamp(2.25rem, 1.55rem + 3.5vw, 4.4rem);
+  --step-6:  clamp(2.45rem, 1.28rem + 5.85vw, 6rem);
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.32;
+  --leading-normal: 1.78;
+
+  --tracking-wide: 0.12em;
+  --tracking-widest: 0.26em;
+
+  /* Mesure de lecture étroite. */
+  --measure: 58ch;
+  --measure-tight: 44ch;
+
+  /* Un seul rail vertical : toutes les sections partagent la même largeur et
+     le même bord gauche. La lisibilité vient de --measure, pas du conteneur. */
+  --container: 76rem;
+  --container-narrow: 76rem;
+  --container-xs: 76rem;
+
+  /* Espacements très généreux. */
+  --space-xl:  clamp(3rem, 2.4rem + 2.5vw, 4.5rem);
+  --space-2xl: clamp(3.75rem, 2.4rem + 5.5vw, 7rem);
+  --space-3xl: clamp(5.25rem, 3rem + 9.5vw, 11rem);
+
+  --gutter: clamp(1.25rem, 0.6rem + 3.2vw, 3rem);
+
+  --header-h: 68px;
+  --border-1: 1px solid var(--c-border);
+}
+
+@media (min-width: 60em) {
+  :root[data-design='mono'] { --header-h: 88px; }
+}
+
+/* --------------------------------------------------------------- SOCLE */
+
+:root[data-design='mono'] body {
+  background-image: none;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+}
+
+/* Pictogrammes au trait : le remplissage global ne doit pas les empâter. */
+:root[data-design='mono'] svg[fill='none'] { fill: none; }
+
+:root[data-design='mono'] ::selection {
+  background: var(--c-text);
+  color: var(--c-bg);
+}
+
+/* Focus clavier : cadre d'encre franc, toujours visible sur blanc. */
+:root[data-design='mono'] :focus-visible {
+  outline: 2px solid var(--c-accent-bright);
+  outline-offset: 3px;
+  border-radius: 0;
+}
+
+:root[data-design='mono'] .skip-link {
+  border-radius: 0;
+  box-shadow: none;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ---------------------------------------------------------- TYPOGRAPHIE */
+
+:root[data-design='mono'] :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4) {
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--heading-tracking);
+  text-wrap: balance;
+  /* Le français accentué ne doit jamais toucher la ligne du dessus. */
+  padding-block-start: 0.02em;
+}
+
+:root[data-design='mono'] h1,
+:root[data-design='mono'] .h1 { font-weight: 400; }
+
+:root[data-design='mono'] h3,
+:root[data-design='mono'] .h3 { line-height: 1.26; }
+
+:root[data-design='mono'] h4,
+:root[data-design='mono'] .h4 { font-weight: 400; line-height: 1.3; }
+
+:root[data-design='mono'] .display {
+  font-size: var(--step-6);
+  font-weight: 400;
+  line-height: var(--display-leading);
+  letter-spacing: -0.022em;
+}
+
+/* Le « mark » n'est pas coloré : il bascule en italique — le contraste
+   typographique remplace la couleur. */
+:root[data-design='mono'] .mark {
+  color: var(--c-text);
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+:root[data-design='mono'] strong,
+:root[data-design='mono'] b { font-weight: 600; }
+
+/* Liens de contenu : soulignement fin dans LA couleur. */
+:root[data-design='mono'] :where(main) a:not([class]) {
+  color: var(--c-text);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.28em;
+  text-decoration-color: var(--c-accent-2);
+}
+:root[data-design='mono'] :where(main) a:not([class]):hover {
+  color: var(--c-accent-bright);
+  text-decoration-color: currentColor;
+}
+
+/* Sur-titres : petites capitales très espacées + un point minuscule. */
+:root[data-design='mono'] .eyebrow {
+  align-items: flex-start;
+  gap: 0.9em;
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  color: var(--c-text-muted);
+}
+:root[data-design='mono'] .eyebrow::before {
+  width: 5px;
+  height: 5px;
+  margin-block-start: 0.62em;
+  border-radius: 50%;
+  background: var(--c-accent-2);
+}
+:root[data-design='mono'] .eyebrow--plain::before { display: none; }
+:root[data-design='mono'] .section__head--center .eyebrow::after { display: none; }
+
+:root[data-design='mono'] .lead {
+  font-size: var(--step-1);
+  line-height: 1.7;
+  color: var(--c-text-soft);
+  max-width: 46ch;
+}
+
+:root[data-design='mono'] .note {
+  font-size: var(--step-small);
+  letter-spacing: 0.01em;
+}
+
+:root[data-design='mono'] .prose h2 { font-size: var(--step-3); }
+:root[data-design='mono'] .prose h3 { font-size: var(--step-2); }
+:root[data-design='mono'] .prose > * + :is(h2, h3) { margin-top: var(--space-2xl); }
+
+/* ------------------------------------------------------------- SECTIONS */
+
+:root[data-design='mono'] .section { padding-block: var(--space-2xl); }
+:root[data-design='mono'] .section--tight { padding-block: var(--space-xl); }
+
+/* Aucun aplat teinté : les sections se séparent par du vide et un filet. */
+:root[data-design='mono'] .section--alt { background: none; }
+:root[data-design='mono'] .section--panel { background: none; border-block: 0; }
+:root[data-design='mono'] .section--rule::before { display: none; }
+
+/* Un unique filet hairline en tête de chaque section (hors hero). */
+:root[data-design='mono'] main > .section:not(.hero) > .container::before {
+  content: '';
+  display: block;
+  height: 1px;
+  background: var(--c-border);
+  margin-block-end: var(--space-xl);
+}
+/* Le bandeau d'appel porte déjà son propre filet d'encre : pas de doublon. */
+:root[data-design='mono'] main > .section > .container:has(> .callout)::before { display: none; }
+
+:root[data-design='mono'] .hero { padding-block-start: var(--space-xl); }
+
+/* Hero : la colonne de texte domine, le trait n'est qu'une respiration. */
+@media (min-width: 62em) {
+  :root[data-design='mono'] .hero .grid--sidebar {
+    grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr);
+  }
+  :root[data-design='mono'] .hero .grid--sidebar-left {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr);
+  }
+}
+
+:root[data-design='mono'] .section__head {
+  max-width: var(--measure);
+  margin-bottom: var(--space-2xl);
+}
+/* Tout est aligné à gauche : un seul rail, jamais de centrage. */
+:root[data-design='mono'] .section__head--center {
+  margin-inline: 0;
+  text-align: left;
+}
+:root[data-design='mono'] .section__head--center .cluster--center { justify-content: flex-start; }
+:root[data-design='mono'] .section__title { margin-block: var(--space-s) 0; }
+:root[data-design='mono'] .section__subtitle {
+  margin-top: var(--space-m);
+  font-size: var(--step-1);
+  line-height: 1.7;
+  color: var(--c-text-soft);
+  max-width: 46ch;
+}
+:root[data-design='mono'] .section__actions { margin-top: var(--space-l); }
+
+:root[data-design='mono'] .grid { --grid-gap: var(--space-xl); }
+:root[data-design='mono'] .grid--gap-s { --grid-gap: var(--space-l); }
+:root[data-design='mono'] .grid--gap-l { --grid-gap: var(--space-xl); }
+
+/* --------------------------------------------------------------- BOUTONS */
+
+:root[data-design='mono'] .btn {
+  gap: 0.75em;
+  padding: 1.05em 1.9em;
+  min-height: 48px;
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  border-radius: 0;
+  border: 1px solid transparent;
+  background: none;
+  color: var(--c-text);
+  box-shadow: none;
+  transition: background-color var(--transition), color var(--transition),
+              border-color var(--transition), text-decoration-color var(--transition);
+}
+:root[data-design='mono'] .btn:hover,
+:root[data-design='mono'] .btn:active { transform: none; }
+:root[data-design='mono'] .btn:focus-visible {
+  outline: 2px solid var(--c-accent-bright);
+  outline-offset: 3px;
+}
+:root[data-design='mono'] .btn svg { width: 1.05em; height: 1.05em; }
+
+/* Pictogrammes au trait fin, partout. */
+:root[data-design='mono'] :is(.btn, .faq__icon, .footer__social-link, .zone-pin, .contact-tile__action) svg {
+  stroke-width: 1.3;
+}
+
+/* Unique remplissage de la maquette : le CTA principal, en noir. */
+:root[data-design='mono'] .btn--primary {
+  background: var(--c-accent);
+  border-color: var(--c-accent);
+  color: var(--c-text-on-accent);
+  box-shadow: none;
+}
+:root[data-design='mono'] .btn--primary:hover {
+  background: var(--c-bg);
+  border-color: var(--c-text);
+  color: var(--c-text);
+}
+
+/* Secondaire : cadre d'un pixel, jamais rempli. */
+:root[data-design='mono'] .btn--ghost {
+  border-color: var(--c-border-strong);
+  color: var(--c-text);
+  background: none;
+}
+:root[data-design='mono'] .btn--ghost:hover {
+  border-color: var(--c-text);
+  background: none;
+  color: var(--c-text);
+}
+
+/* Tertiaire : simple texte souligné. */
+:root[data-design='mono'] .btn--quiet {
+  padding-inline: 0;
+  border-color: transparent;
+  color: var(--c-text);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.55em;
+  text-decoration-color: var(--c-border-strong);
+}
+:root[data-design='mono'] .btn--quiet:hover {
+  color: var(--c-text);
+  text-decoration-color: var(--c-accent-2);
+}
+
+:root[data-design='mono'] .btn--lg {
+  padding: 1.25em 2.2em;
+  min-height: 56px;
+  font-size: var(--step-small);
+}
+:root[data-design='mono'] .btn--sm {
+  padding: 0.85em 1.5em;
+  min-height: 44px;
+  font-size: var(--step-small);
+}
+:root[data-design='mono'] .btn--quiet.btn--lg,
+:root[data-design='mono'] .btn--quiet.btn--sm { padding-inline: 0; }
+
+:root[data-design='mono'] .cluster { --cluster-space: var(--space-m); }
+:root[data-design='mono'] .cluster--xs { --cluster-space: var(--space-m); }
+
+/* ------------------------------------------- PLUS AUCUNE CARTE : DES LIGNES */
+
+:root[data-design='mono'] .card {
+  gap: var(--card-gap, var(--space-s));
+  padding: var(--space-m) 0 0;
+  background: none;
+  background-image: none;
+  border: 0;
+  border-top: 1px solid var(--c-border);
+  border-radius: 0;
+  box-shadow: none;
+  transition: border-color var(--transition);
+}
+:root[data-design='mono'] .card--pad-l { padding: var(--space-m) 0 0; }
+:root[data-design='mono'] .card--flat { padding: var(--space-m) 0 0; }
+:root[data-design='mono'] .card--raised { box-shadow: none; }
+:root[data-design='mono'] .card--accent { border-top-color: var(--c-text); }
+:root[data-design='mono'] .card--accent::after { display: none; }
+:root[data-design='mono'] .card--featured {
+  background-image: none;
+  border-top-color: var(--c-text);
+}
+:root[data-design='mono'] .card--hover:hover,
+:root[data-design='mono'] a.card:hover {
+  transform: none;
+  box-shadow: none;
+  border-top-color: var(--c-text);
+}
+
+:root[data-design='mono'] .card__title {
+  font-size: var(--step-2);
+  font-weight: 400;
+  line-height: 1.26;
+}
+:root[data-design='mono'] .card__text { color: var(--c-text-soft); }
+:root[data-design='mono'] .card__meta {
+  font-size: var(--step-small);
+  letter-spacing: 0.02em;
+}
+:root[data-design='mono'] .card__foot { padding-top: var(--space-s); }
+
+/* Pictogrammes : le trait seul, sans pastille ni cadre. */
+:root[data-design='mono'] .icon-badge {
+  width: auto;
+  height: auto;
+  justify-content: flex-start;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--c-text);
+}
+:root[data-design='mono'] .icon-badge svg {
+  width: 1.55rem;
+  height: 1.55rem;
+  stroke-width: 1.2;
+}
+:root[data-design='mono'] .icon-badge--2 {
+  background: none;
+  border: 0;
+  color: var(--c-accent-2);
+}
+:root[data-design='mono'] .icon-badge--round { border-radius: 0; }
+
+/* Numéros d'étape : chiffre serif clair, jamais une pastille. */
+:root[data-design='mono'] .step-number {
+  width: auto;
+  height: auto;
+  justify-content: flex-start;
+  background: none;
+  border-radius: 0;
+  color: var(--c-text-faint);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--step-3);
+  font-weight: 400;
+  line-height: 1;
+}
+
+/* ------------------------------------------------ PUCES, LISTES, FILETS */
+
+:root[data-design='mono'] .chip {
+  padding: 0;
+  gap: 0.7em;
+  font-family: var(--font-label);
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+:root[data-design='mono'] .chip--dot::before {
+  width: 4px;
+  height: 4px;
+  background: var(--c-accent-2);
+}
+
+/* Listes : des lignes séparées par un filet fin, jamais des pastilles. */
+:root[data-design='mono'] .list-check,
+:root[data-design='mono'] .list-no { gap: 0; }
+:root[data-design='mono'] .list-check li,
+:root[data-design='mono'] .list-no li {
+  padding-left: 1.6rem;
+  padding-block: var(--space-xs);
+  border-bottom: 1px solid var(--c-border);
+  color: var(--c-text-soft);
+}
+:root[data-design='mono'] .list-check li:first-child,
+:root[data-design='mono'] .list-no li:first-child { border-top: 1px solid var(--c-border); }
+
+:root[data-design='mono'] .list-check li::before,
+:root[data-design='mono'] .list-no li::before { display: none; }
+
+:root[data-design='mono'] .list-check li::after {
+  left: 0.15rem;
+  top: calc(var(--space-xs) + 0.4em);
+  width: 0.34rem;
+  height: 0.62rem;
+  border: 1px solid var(--c-text);
+  border-top: 0;
+  border-left: 0;
+  transform: rotate(42deg);
+}
+:root[data-design='mono'] .list-no li::after {
+  left: 0;
+  top: calc(var(--space-xs) + 0.78em);
+  width: 0.7rem;
+  height: 1px;
+  background: var(--c-accent-2);
+  border-radius: 0;
+}
+
+/* Chiffres clés : grand serif d'encre, étiquette en capitales espacées. */
+:root[data-design='mono'] .stat { gap: var(--space-2xs); }
+:root[data-design='mono'] .stat__value {
+  font-size: var(--step-4);
+  font-weight: 400;
+  color: var(--c-text);
+  letter-spacing: -0.02em;
+}
+:root[data-design='mono'] .stat__label {
+  font-family: var(--font-label);
+  font-size: var(--step-small);
+  letter-spacing: 0.2em;
+  color: var(--c-text-muted);
+}
+
+/* ------------------------------------------------------- VISUELS (TRAITS) */
+
+:root[data-design='mono'] .visual {
+  background-color: transparent;
+  background-image: none;
+  border: 0;
+  border-radius: 0;
+  min-height: 0;
+  overflow: visible;
+}
+:root[data-design='mono'] .visual--grid::after { display: none; }
+/* Plus de grille ni d'aplat : un simple cadre d'un pixel, comme une planche. */
+:root[data-design='mono'] .visual--ratio,
+:root[data-design='mono'] .visual--square {
+  border: 1px solid var(--c-border);
+}
+
+/* Bandeau d'appel : pas d'encadré, un filet d'encre et du vide. */
+:root[data-design='mono'] .callout {
+  padding: var(--space-xl) 0 0;
+  border: 0;
+  border-top: 1px solid var(--c-text);
+  border-radius: 0;
+  background-color: transparent;
+  background-image: none;
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------------ FAQ */
+
+:root[data-design='mono'] .faq { gap: 0; }
+:root[data-design='mono'] .faq__item {
+  background: none;
+  background-image: none;
+  border: 0;
+  border-bottom: 1px solid var(--c-border);
+  border-radius: 0;
+  overflow: visible;
+}
+:root[data-design='mono'] .faq__item:first-child { border-top: 1px solid var(--c-border); }
+:root[data-design='mono'] .faq__item[open] { border-color: var(--c-border); }
+:root[data-design='mono'] .faq__summary {
+  gap: var(--space-m);
+  padding: var(--space-m) 0;
+  min-height: 60px;
+}
+:root[data-design='mono'] .faq__summary:hover { background: none; }
+:root[data-design='mono'] .faq__summary:focus-visible {
+  outline: 2px solid var(--c-accent-bright);
+  outline-offset: 2px;
+}
+:root[data-design='mono'] .faq__q {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+:root[data-design='mono'] .faq__icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--c-text);
+}
+:root[data-design='mono'] .faq__icon svg { width: 1.1rem; height: 1.1rem; }
+:root[data-design='mono'] .faq__answer { padding: 0 0 var(--space-m); }
+:root[data-design='mono'] .faq__more { margin-top: var(--space-xl); }
+
+/* ---------------------------------------------------------- TÉMOIGNAGES */
+
+:root[data-design='mono'] .quote-card blockquote p {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--c-text);
+}
+:root[data-design='mono'] .quote-card figcaption {
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--c-border);
+}
+:root[data-design='mono'] .quote-card__name {
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--c-text-muted);
+}
+
+/* ------------------------------------------------------------- EN-TÊTE */
+
+:root[data-design='mono'] .site-header {
+  background: var(--c-bg);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid var(--c-border);
+}
+
+:root[data-design='mono'] .brand {
+  gap: 0.55rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 0.85rem + 0.9vw, 1.55rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+:root[data-design='mono'] .brand__mark {
+  width: 1.05rem;
+  height: 1.05rem;
+  background: none;
+  border-radius: 0;
+  color: var(--c-accent-2);
+}
+:root[data-design='mono'] .brand__mark svg { width: 1.05rem; height: 1.05rem; }
+:root[data-design='mono'] .brand:hover .brand__mark { transform: none; }
+:root[data-design='mono'] .brand__name { padding-top: 0.06em; }
+
+:root[data-design='mono'] .nav__list { gap: var(--space-m); }
+:root[data-design='mono'] .nav__link {
+  padding: 0.6rem 0;
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--c-text-muted);
+  border-radius: 0;
+}
+:root[data-design='mono'] .nav__link::after {
+  left: 0;
+  right: 0;
+  bottom: 0.15rem;
+  height: 1px;
+  border-radius: 0;
+  background: var(--c-accent-2);
+}
+:root[data-design='mono'] .nav__link:hover { color: var(--c-text); }
+:root[data-design='mono'] .nav__link[aria-current='page'] { color: var(--c-text); }
+
+:root[data-design='mono'] .burger {
+  border: 0;
+  border-radius: 0;
+  color: var(--c-text);
+}
+:root[data-design='mono'] .burger:hover { color: var(--c-text); border-color: transparent; }
+:root[data-design='mono'] .burger__bar { height: 1px; border-radius: 0; }
+
+@media (max-width: 61.999em) {
+  :root[data-design='mono'] .nav {
+    background-color: var(--c-bg);
+    background-image: none;
+    gap: var(--space-m);
+  }
+  :root[data-design='mono'] .nav__list { gap: 0; }
+  :root[data-design='mono'] .nav__link {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 7vw, 2.1rem);
+    font-weight: 400;
+    line-height: 1.25;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--c-text);
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--c-border);
+  }
+  :root[data-design='mono'] .nav__list > li:first-child .nav__link {
+    border-top: 1px solid var(--c-border);
+  }
+  :root[data-design='mono'] .nav__link[aria-current='page'] {
+    font-style: italic;
+  }
+}
+
+/* ------------------------------------------------------------ PIED DE PAGE */
+
+:root[data-design='mono'] .site-footer {
+  margin-top: var(--space-3xl);
+  padding-block: var(--space-2xl) var(--space-l);
+  background-color: var(--c-bg);
+  background-image: none;
+  border-top: 1px solid var(--c-text);
+}
+:root[data-design='mono'] .footer__logo {
+  font-weight: 400;
+  font-size: 1.4rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+:root[data-design='mono'] .footer__logo-mark {
+  width: 1rem;
+  height: 1rem;
+  background: none;
+  border-radius: 0;
+  color: var(--c-accent-2);
+}
+:root[data-design='mono'] .footer__logo-mark svg { width: 1rem; height: 1rem; }
+:root[data-design='mono'] .footer__tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--step-1);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--c-text-muted);
+}
+:root[data-design='mono'] .footer__title {
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+}
+:root[data-design='mono'] .footer__social-link {
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: 1px solid var(--c-border);
+  border-radius: 0;
+  color: var(--c-text-soft);
+}
+:root[data-design='mono'] .footer__social-link:hover {
+  color: var(--c-text);
+  border-color: var(--c-text);
+  transform: none;
+}
+:root[data-design='mono'] .footer__link { color: var(--c-text-soft); }
+:root[data-design='mono'] .footer__link:hover {
+  color: var(--c-text);
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--c-accent-2);
+  text-underline-offset: 0.28em;
+}
+:root[data-design='mono'] .footer__modes { gap: var(--space-s); margin-top: var(--space-xs); }
+:root[data-design='mono'] .footer__bottom {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--c-border);
+}
+
+/* =========================================================================
+   AJUSTEMENTS PAGE PAR PAGE
+   ========================================================================= */
+
+/* ---- Accueil : le visuel du hero se réduit à un trait fin ---- */
+
+:root[data-design='mono'] .hero__visual {
+  justify-content: flex-end;
+  gap: var(--space-l);
+  padding: 0;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+:root[data-design='mono'] .hero__chart {
+  width: 100%;
+  max-width: none;
+  margin-inline-start: auto;
+  /* Le bas du viewBox est vide depuis que les barres ont disparu : on le retire. */
+  margin-block-end: -26%;
+}
+:root[data-design='mono'] .hero__chart-grid,
+:root[data-design='mono'] .hero__chart-bar { display: none; }
+:root[data-design='mono'] .hero__chart-trend {
+  stroke: var(--c-text);
+  stroke-width: 1.25;
+}
+:root[data-design='mono'] .hero__chart-dot {
+  fill: var(--c-accent-2);
+  r: 3.5;
+}
+:root[data-design='mono'] .hero__chart-axis { display: none; }
+:root[data-design='mono'] .hero__visual-label {
+  padding-top: var(--space-s);
+  border-top: 1px solid var(--c-border);
+  font-size: var(--step-small);
+  letter-spacing: 0.24em;
+  color: var(--c-text-muted);
+}
+
+/* ---- Services ---- */
+
+:root[data-design='mono'] .hero__jump {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--c-border);
+}
+:root[data-design='mono'] .offer__label {
+  margin-top: var(--space-s);
+  font-family: var(--font-label);
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--c-text-muted);
+}
+:root[data-design='mono'] .offer__for {
+  margin-top: var(--space-s);
+  padding: var(--space-s) 0 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--c-border);
+  border-radius: 0;
+}
+:root[data-design='mono'] .offer__for-label {
+  font-size: var(--step-small);
+  letter-spacing: 0.2em;
+  color: var(--c-text-muted);
+}
+:root[data-design='mono'] .offer__for-text {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-style: italic;
+  color: var(--c-text);
+}
+
+/* ---- À propos ---- */
+
+:root[data-design='mono'] .portrait__visual {
+  place-items: center;
+  aspect-ratio: 1 / 1;
+  border: 0;
+}
+:root[data-design='mono'] .portrait__art {
+  width: 74%;
+  max-width: 19rem;
+  color: var(--c-text);
+  opacity: 1;
+}
+:root[data-design='mono'] .portrait__stroke,
+:root[data-design='mono'] .portrait__plate-l,
+:root[data-design='mono'] .portrait__plate-xl,
+:root[data-design='mono'] .portrait__bar {
+  stroke-width: 1;
+  opacity: 1;
+}
+:root[data-design='mono'] .portrait__plate {
+  position: static;
+  margin-top: var(--space-m);
+  padding: var(--space-s) 0 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--c-border);
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+:root[data-design='mono'] .portrait__name {
+  font-size: var(--step-2);
+  font-weight: 400;
+  line-height: 1.3;
+}
+:root[data-design='mono'] .portrait__role {
+  font-size: var(--step-small);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+:root[data-design='mono'] .timeline { gap: 0; }
+:root[data-design='mono'] .timeline > li {
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: var(--space-m);
+  padding-block: var(--space-l);
+  border-bottom: 1px solid var(--c-border);
+}
+:root[data-design='mono'] .timeline > li:first-child { border-top: 1px solid var(--c-border); }
+:root[data-design='mono'] .timeline > li:not(:last-child)::before { display: none; }
+:root[data-design='mono'] .timeline .stack { max-width: var(--measure); }
+
+:root[data-design='mono'] .pullquote {
+  margin-top: var(--space-2xl);
+  padding: var(--space-l) 0 0;
+  border-left: 0;
+  border-top: 1px solid var(--c-text);
+  font-size: var(--step-3);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.4;
+  max-width: var(--measure-tight);
+}
+:root[data-design='mono'] .engagements { margin-top: var(--space-xl); }
+:root[data-design='mono'] .credential__title { font-size: var(--step-2); }
+
+/* ---- Réservation ---- */
+
+:root[data-design='mono'] .booking-widget {
+  border: 1px solid var(--c-border);
+  border-radius: 0;
+  background-color: var(--c-bg);
+}
+:root[data-design='mono'] .coords {
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--c-border);
+}
+:root[data-design='mono'] .coords dt {
+  font-size: var(--step-small);
+  letter-spacing: 0.2em;
+}
+:root[data-design='mono'] .coords a {
+  color: var(--c-text);
+  text-decoration-color: var(--c-accent-2);
+  text-underline-offset: 0.28em;
+}
+:root[data-design='mono'] .coords a:hover { color: var(--c-text); text-decoration-color: currentColor; }
+
+/* ---- Contact ---- */
+
+:root[data-design='mono'] .contact-tile__title {
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--c-text-muted);
+}
+:root[data-design='mono'] .contact-tile__value {
+  font-size: var(--step-2);
+  font-weight: 400;
+  line-height: 1.3;
+}
+:root[data-design='mono'] .contact-tile:hover .contact-tile__value,
+:root[data-design='mono'] .contact-tile:focus-visible .contact-tile__value { color: var(--c-text); }
+:root[data-design='mono'] .contact-tile__action {
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--c-text);
+}
+:root[data-design='mono'] .zone-pin { color: var(--c-text); }
+:root[data-design='mono'] .zone-pin svg {
+  width: 3rem;
+  height: 3rem;
+  filter: none;
+}
+:root[data-design='mono'] .zone-item {
+  border-left: 0;
+  border-top: 1px solid var(--c-border);
+}
+:root[data-design='mono'] .zone-item__title {
+  font-size: var(--step-1);
+  font-weight: 400;
+}
+:root[data-design='mono'] .social-tile__title {
+  font-size: var(--step-2);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+:root[data-design='mono'] .social-tile:hover .social-tile__title { color: var(--c-text); }
+
+/* ---- Pages légales ---- */
+
+:root[data-design='mono'] .prose.legal { max-width: 72ch; }
+:root[data-design='mono'] .legal__rows div { padding-block: var(--space-s); }
+@media (min-width: 40em) {
+  :root[data-design='mono'] .legal__rows div { grid-template-columns: 12rem minmax(0, 1fr); }
+}
+:root[data-design='mono'] .legal__rows dt {
+  font-family: var(--font-label);
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+/* ------------------------------------------------------ ACCESSIBILITÉ */
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-design='mono'] *,
+  :root[data-design='mono'] *::before,
+  :root[data-design='mono'] *::after {
+    /* Les DÉLAIS aussi sont neutralisés : sinon un élément reste invisible. */
+    animation-delay: 0ms !important;
+    transition-delay: 0ms !important;
+    --reveal-delay: 0ms !important;
+  }
+  :root[data-design='mono'] .reveal,
+  :root[data-design='mono'] .animate-fade-up,
+  :root[data-design='mono'] .animate-fade {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}

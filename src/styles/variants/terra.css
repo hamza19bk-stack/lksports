@@ -1,0 +1,853 @@
+/* =========================================================================
+   VARIANTE « TERRA » — cocon organique : sable, argile, sauge
+   -------------------------------------------------------------------------
+   Tous les sélecteurs sont préfixés par :root[data-design="terra"] afin de
+   l'emporter sur global.css et sur les styles scopés d'Astro.
+   Aucune couleur littérale d'accent : var(--c-accent…) ou color-mix().
+   Texte sur fond d'accent : var(--c-text-on-accent).
+
+   Principes de forme :
+   - blocs aux rayons très larges et ASYMÉTRIQUES (--terra-r-a / --terra-r-b) ;
+   - séparateurs de sections en courbe douce (pseudo-éléments elliptiques) ;
+   - pastilles rondes derrière les icônes, aucune bordure dure ;
+   - ombres très douces et larges, illustrations CSS (cercles/arcs) en fond.
+   ========================================================================= */
+
+/* ------------------------------------------------------------ FONDATIONS */
+
+:root[data-design="terra"] {
+  /* Rayons organiques asymétriques (alternés d'une carte à l'autre) */
+  --terra-r-a: 40px 14px 40px 14px;
+  --terra-r-b: 14px 40px 14px 40px;
+  --terra-r-s: 30px 12px 30px 12px;
+  --terra-r-blob: 72px 24px 72px 24px;
+  --terra-r-visual: 120px 28px 120px 28px;
+
+  /* Aplats doux par section */
+  --terra-wash: color-mix(in srgb, var(--c-accent) 9%, var(--c-bg));
+  --terra-curve: clamp(32px, 6vw, 88px);
+
+  /* Reliefs */
+  --terra-lift: inset 0 1px 0 color-mix(in srgb, var(--c-text-on-accent) 26%, transparent);
+  --terra-ledge: 0 3px 0 color-mix(in srgb, var(--c-accent-bright) 85%, transparent);
+  --terra-halo: 0 0 0 7px color-mix(in srgb, var(--c-accent) 7%, transparent);
+  --terra-halo-2: 0 0 0 7px color-mix(in srgb, var(--c-accent-2) 7%, transparent);
+
+  --header-h: 72px;
+  --leading-tight: 1.16;
+  --leading-snug: 1.3;
+  --leading-normal: 1.72;
+}
+
+@media (min-width: 60em) {
+  :root[data-design="terra"] { --header-h: 84px; }
+}
+
+:root[data-design="terra"] body {
+  background-color: var(--c-bg);
+  background-image:
+    radial-gradient(52rem 38rem at 92% -8%, color-mix(in srgb, var(--c-accent-2) 13%, transparent), transparent 62%),
+    radial-gradient(44rem 34rem at -12% 6%, color-mix(in srgb, var(--c-accent) 12%, transparent), transparent 60%),
+    radial-gradient(38rem 26rem at 40% 108%, color-mix(in srgb, var(--c-accent) 8%, transparent), transparent 62%);
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+}
+:root[data-design="terra"] main { flex: 1 0 auto; min-width: 0; }
+
+/* ----------------------------------------------------------- TYPOGRAPHIE
+   Interlignage confortable : en français, les capitales et minuscules
+   accentuées (É, È, À) d'une ligne ne doivent jamais toucher la ligne
+   précédente. Aucun mot n'est coupé au milieu dans les titres. */
+
+:root[data-design="terra"] :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4) {
+  line-height: 1.18;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+  text-wrap: balance;
+}
+:root[data-design="terra"] h1,
+:root[data-design="terra"] .h1 { font-weight: 700; letter-spacing: -0.022em; line-height: 1.14; }
+:root[data-design="terra"] .display {
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: var(--display-leading);
+}
+:root[data-design="terra"] h2,
+:root[data-design="terra"] .h2 { line-height: 1.16; }
+:root[data-design="terra"] h3,
+:root[data-design="terra"] .h3,
+:root[data-design="terra"] .card__title { line-height: 1.24; letter-spacing: -0.01em; }
+/* Titres de cartes : calibrés pour des colonnes étroites (grilles à 3 ou 4) */
+:root[data-design="terra"] .card__title { font-size: var(--step-1); font-weight: 700; }
+:root[data-design="terra"] .card--pad-l > .card__title { font-size: var(--step-2); }
+:root[data-design="terra"] h4,
+:root[data-design="terra"] .h4 { line-height: 1.26; font-weight: 600; }
+
+:root[data-design="terra"] .lead { color: var(--c-text-soft); }
+
+/* Mot mis en valeur : trait courbe tracé sous le mot (swash) */
+:root[data-design="terra"] .mark {
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  padding-inline: 0.04em;
+  color: var(--c-accent);
+}
+:root[data-design="terra"] .mark::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -0.05em;
+  right: -0.05em;
+  bottom: 0.01em;
+  height: 0.3em;
+  border: 0 solid color-mix(in srgb, var(--c-accent-2) 62%, transparent);
+  border-bottom-width: 0.13em;
+  border-radius: 0 0 55% 55% / 0 0 100% 100%;
+}
+
+/* Sur-titres : pastille ronde au lieu d'un filet */
+:root[data-design="terra"] .eyebrow {
+  gap: 0.6em;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.13em;
+}
+:root[data-design="terra"] .eyebrow::before,
+:root[data-design="terra"] .section__head--center .eyebrow::after {
+  width: 0.58rem;
+  height: 0.58rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Liens de contenu : soulignement en courbe douce */
+:root[data-design="terra"] :where(main) a:not([class]) {
+  position: relative;
+  color: var(--c-accent);
+  text-decoration: none;
+}
+:root[data-design="terra"] :where(main) a:not([class])::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.06em;
+  height: 0.4em;
+  border-bottom: 2px solid currentColor;
+  border-radius: 0 0 60% 60% / 0 0 100% 100%;
+  opacity: 0.5;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+:root[data-design="terra"] :where(main) a:not([class]):hover { color: var(--c-accent-bright); }
+:root[data-design="terra"] :where(main) a:not([class]):hover::after { opacity: 1; }
+
+/* Focus clavier : anneau arrondi bien visible */
+:root[data-design="terra"] :focus-visible {
+  outline: 3px solid var(--c-accent-bright);
+  outline-offset: 3px;
+  border-radius: var(--radius-s);
+}
+
+/* ------------------------------------------------------------- SECTIONS
+   Les sections en aplat sont reliées par une courbe douce (dôme
+   elliptique) au-dessus et au-dessous : aucune arête droite. */
+
+:root[data-design="terra"] .section--alt {
+  background: var(--terra-wash);
+  background-image: none;
+}
+/* Un aplat sur deux bascule sur l'accent secondaire (sections repérées par
+   leur ancre : l'alternance reste juste sur chacune des pages). */
+:root[data-design="terra"] .section--alt:is(#temoignages, #faq, #valeurs, #formats, #reseaux) {
+  --terra-wash: color-mix(in srgb, var(--c-accent-2) 9%, var(--c-bg));
+}
+:root[data-design="terra"] .section--alt::before,
+:root[data-design="terra"] .section--alt::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--terra-curve);
+  background-color: var(--terra-wash);
+  pointer-events: none;
+}
+:root[data-design="terra"] .section--alt::before {
+  top: calc(var(--terra-curve) * -1 + 1px);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+:root[data-design="terra"] .section--alt::after {
+  bottom: calc(var(--terra-curve) * -1 + 1px);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+}
+
+/* Filet de section : remplacé par un arc dessiné */
+:root[data-design="terra"] .section--rule::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(30rem, 72%);
+  height: 1.6rem;
+  background: none;
+  border: 0 solid color-mix(in srgb, var(--c-accent) 34%, transparent);
+  border-top-width: 2px;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  opacity: 1;
+}
+
+:root[data-design="terra"] .section--panel {
+  background: var(--c-surface);
+  border-block: 0;
+  border-radius: var(--terra-r-blob);
+  box-shadow: var(--shadow-s);
+}
+
+:root[data-design="terra"] .section__subtitle { color: var(--c-text-soft); }
+
+/* -------------------------------------------------------------- BOUTONS
+   Pleins, arrondis en gélule, avec un léger relief (liseré haut clair +
+   petite marche basse teintée) — jamais de bordure dure. */
+
+:root[data-design="terra"] .btn {
+  border-color: transparent;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1em 1.7em;
+}
+:root[data-design="terra"] .btn--lg { padding: 1.2em 2.2em; }
+:root[data-design="terra"] .btn--sm { padding: 0.75em 1.2em; }
+
+:root[data-design="terra"] .btn--primary {
+  box-shadow: var(--terra-ledge), var(--shadow-accent), var(--terra-lift);
+}
+:root[data-design="terra"] .btn--primary:hover {
+  box-shadow: var(--terra-ledge), var(--shadow-m), var(--terra-lift);
+}
+:root[data-design="terra"] .btn--primary:active {
+  box-shadow: var(--shadow-xs), var(--terra-lift);
+}
+
+:root[data-design="terra"] .btn--ghost {
+  --btn-bg: var(--c-surface);
+  --btn-color: var(--c-text);
+  --btn-border: transparent;
+  box-shadow: var(--shadow-s);
+}
+:root[data-design="terra"] .btn--ghost:hover {
+  --btn-bg: var(--c-surface);
+  --btn-color: var(--c-accent);
+  --btn-border: transparent;
+  box-shadow: var(--shadow-m);
+}
+
+:root[data-design="terra"] .btn--quiet {
+  --btn-bg: color-mix(in srgb, var(--c-accent) 8%, transparent);
+  --btn-border: transparent;
+  --btn-color: var(--c-text-soft);
+  box-shadow: none;
+}
+:root[data-design="terra"] .btn--quiet:hover {
+  --btn-bg: color-mix(in srgb, var(--c-accent) 15%, transparent);
+  --btn-color: var(--c-accent-bright);
+}
+
+:root[data-design="terra"] .skip-link { border-radius: var(--radius-pill); }
+
+/* --------------------------------------------------------------- CARTES
+   Crème, sans bordure, coins très arrondis et asymétriques, ombre large,
+   petite illustration CSS (cercle/arc) posée en fond. */
+
+:root[data-design="terra"] .card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: var(--space-m);
+  background-color: var(--c-surface);
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: var(--terra-r-a);
+  box-shadow: var(--shadow-s);
+}
+:root[data-design="terra"] .card--pad-l { padding: var(--space-l); }
+
+/* Illustration de fond : un arc net (anneau épais débordant du coin), tracé
+   plutôt que dégradé — on lit une forme dessinée, pas une tache floue. */
+:root[data-design="terra"] .card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -5.5rem;
+  right: -5rem;
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  background: none;
+  border: 1.15rem solid color-mix(in srgb, var(--c-accent) 13%, transparent);
+  pointer-events: none;
+}
+
+:root[data-design="terra"] .card:nth-child(even),
+:root[data-design="terra"] li:nth-child(even) > .card,
+:root[data-design="terra"] li:nth-child(even) > * > .card {
+  border-radius: var(--terra-r-b);
+}
+:root[data-design="terra"] .card:nth-child(even)::before,
+:root[data-design="terra"] li:nth-child(even) > .card::before {
+  top: auto;
+  right: auto;
+  bottom: -5.5rem;
+  left: -5rem;
+  border-color: color-mix(in srgb, var(--c-accent-2) 13%, transparent);
+}
+
+:root[data-design="terra"] .card--flat {
+  box-shadow: var(--shadow-xs);
+  background-color: color-mix(in srgb, var(--c-surface) 70%, transparent);
+}
+
+:root[data-design="terra"] .card--hover:hover,
+:root[data-design="terra"] a.card:hover {
+  transform: translateY(-5px);
+  border-color: transparent;
+  box-shadow: var(--shadow-l);
+}
+
+:root[data-design="terra"] .card--accent {
+  background-color: color-mix(in srgb, var(--c-accent) 8%, var(--c-surface));
+  border-color: transparent;
+}
+:root[data-design="terra"] .card--accent::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: auto auto -4.5rem -3.5rem;
+  top: auto;
+  width: 14rem;
+  height: 14rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-accent) 9%, transparent);
+}
+
+:root[data-design="terra"] .card--featured {
+  background-color: color-mix(in srgb, var(--c-accent-2) 9%, var(--c-surface));
+  background-image: none;
+  border-color: transparent;
+}
+
+:root[data-design="terra"] .card--raised { box-shadow: var(--shadow-l); }
+
+:root[data-design="terra"] .card__text,
+:root[data-design="terra"] .prose p,
+:root[data-design="terra"] .prose li { color: var(--c-text-soft); }
+
+/* Pastilles rondes derrière les icônes */
+:root[data-design="terra"] .icon-badge {
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-accent) 19%, var(--c-surface));
+  box-shadow: var(--terra-halo);
+  margin-bottom: var(--space-3xs);
+}
+:root[data-design="terra"] .icon-badge--2 {
+  background: color-mix(in srgb, var(--c-accent-2) 19%, var(--c-surface));
+  box-shadow: var(--terra-halo-2);
+  border: 0;
+}
+:root[data-design="terra"] .icon-badge svg { width: 1.6rem; height: 1.6rem; }
+
+:root[data-design="terra"] .step-number {
+  width: 3rem;
+  height: 3rem;
+  font-size: var(--step-1);
+  box-shadow: var(--terra-ledge), var(--shadow-s), var(--terra-lift);
+  margin-bottom: var(--space-3xs);
+}
+
+/* --------------------------------------------------- PUCES / ÉTIQUETTES */
+
+:root[data-design="terra"] .chip {
+  padding: 0.55em 1.05em;
+  color: var(--c-text-soft);
+  background: color-mix(in srgb, var(--c-accent) 9%, var(--c-surface));
+  border: 0;
+  box-shadow: var(--shadow-xs);
+}
+:root[data-design="terra"] .chip--dot::before {
+  width: 0.55em;
+  height: 0.55em;
+  background: var(--c-accent);
+}
+
+:root[data-design="terra"] .list-check li::before,
+:root[data-design="terra"] .list-no li::before {
+  border: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  top: 0.32em;
+  background: color-mix(in srgb, var(--c-accent) 22%, transparent);
+}
+:root[data-design="terra"] .list-no li::before {
+  background: color-mix(in srgb, var(--c-accent-2) 22%, transparent);
+}
+:root[data-design="terra"] .list-check li::after { left: 0.39rem; top: 0.6em; }
+:root[data-design="terra"] .list-no li::after { left: 0.35rem; }
+
+/* Chiffres clés */
+:root[data-design="terra"] .stat__value {
+  font-size: var(--step-5);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+:root[data-design="terra"] .stat__label { letter-spacing: 0.12em; }
+
+/* -------------------------------------------------- VISUELS ORGANIQUES
+   Le visuel du hero devient une composition de formes superposées :
+   la plaque elle-même (galet très arrondi) + deux cercles en fond. */
+
+:root[data-design="terra"] .visual {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--terra-r-visual);
+  background-color: color-mix(in srgb, var(--c-accent) 8%, var(--c-surface));
+  background-image: none;
+  box-shadow: var(--shadow-l);
+}
+/* The hero register card carries text, unlike the decorative panel this
+   variant was designed around, so the background circles are suppressed on it:
+   they sit over the company details and drop the contrast below legible. */
+:root[data-design="terra"] .visual.hero__card::before,
+:root[data-design="terra"] .visual.hero__card::after { content: none; }
+/* The organic asymmetric radius eats into the padding box and clips the first
+   character of the top row, so this card takes an ordinary large radius. */
+:root[data-design="terra"] .visual.hero__card { border-radius: var(--radius-l); }
+
+:root[data-design="terra"] .visual::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -14%;
+  top: -18%;
+  width: 62%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-accent-2) 22%, transparent);
+  pointer-events: none;
+}
+:root[data-design="terra"] .visual--grid::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: auto -12% -20% auto;
+  width: 58%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, var(--c-accent) 20%, transparent);
+  background-image: none;
+  background-size: auto;
+  -webkit-mask-image: none;
+  mask-image: none;
+  pointer-events: none;
+}
+
+/* Graphique du hero : barres en gélule, filets effacés, tracé épais */
+:root[data-design="terra"] .hero__visual {
+  padding: var(--space-l);
+  border-radius: var(--terra-r-visual);
+}
+:root[data-design="terra"] .hero__chart-bar rect { rx: 15px; ry: 15px; }
+:root[data-design="terra"] .hero__chart-bar { fill: color-mix(in srgb, var(--c-accent) 26%, var(--c-surface)); }
+:root[data-design="terra"] .hero__chart-bar--on { fill: var(--c-accent); }
+:root[data-design="terra"] .hero__chart-grid { stroke: transparent; }
+:root[data-design="terra"] .hero__chart-axis { stroke: color-mix(in srgb, var(--c-accent) 26%, transparent); stroke-width: 3; }
+:root[data-design="terra"] .hero__chart-trend { stroke: var(--c-accent-2); stroke-width: 4; }
+:root[data-design="terra"] .hero__chart-dot { fill: var(--c-accent-2); }
+:root[data-design="terra"] .hero__visual-label {
+  color: var(--c-text-muted);
+  letter-spacing: 0.13em;
+}
+
+/* Portrait (À propos) : galet + plaque arrondie */
+:root[data-design="terra"] .portrait__visual { border-radius: var(--terra-r-blob); }
+:root[data-design="terra"] .portrait__art { opacity: 0.95; }
+:root[data-design="terra"] .portrait__plate {
+  border: 0;
+  border-radius: var(--terra-r-s);
+  box-shadow: var(--shadow-m);
+}
+:root[data-design="terra"] .zone-pin :global(svg),
+:root[data-design="terra"] .zone-pin svg { filter: none; }
+
+/* ------------------------------------------------------------- BANDEAU */
+
+:root[data-design="terra"] .callout {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--terra-r-blob);
+  padding: var(--space-2xl) var(--space-xl);
+  background-color: color-mix(in srgb, var(--c-accent) 10%, var(--c-surface));
+  background-image: none;
+  box-shadow: var(--shadow-m);
+}
+:root[data-design="terra"] .callout::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: -8%;
+  bottom: -46%;
+  width: 34%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-accent-2) 16%, transparent);
+  pointer-events: none;
+}
+:root[data-design="terra"] .callout::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -6%;
+  top: -34%;
+  width: 24%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-accent) 12%, transparent);
+  pointer-events: none;
+}
+@media (max-width: 39.999em) {
+  :root[data-design="terra"] .callout { padding: var(--space-xl) var(--space-m); }
+}
+
+/* ----------------------------------------------------------------- FAQ */
+
+:root[data-design="terra"] .faq { gap: var(--space-s); }
+:root[data-design="terra"] .faq__item {
+  border: 0;
+  border-radius: var(--terra-r-s);
+  background-color: var(--c-surface);
+  background-image: none;
+  box-shadow: var(--shadow-s);
+}
+:root[data-design="terra"] .faq__item:nth-child(even) { border-radius: 12px 32px 12px 32px; }
+:root[data-design="terra"] .faq__item[open] { box-shadow: var(--shadow-m); border-color: transparent; }
+:root[data-design="terra"] .faq__summary {
+  padding: var(--space-s) var(--space-l);
+  border-radius: inherit;
+}
+:root[data-design="terra"] .faq__summary:hover {
+  background-color: color-mix(in srgb, var(--c-accent) 6%, var(--c-surface));
+}
+:root[data-design="terra"] .faq__icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 0;
+  background: color-mix(in srgb, var(--c-accent) 15%, var(--c-surface));
+}
+
+/* ------------------------------------------------------- TÉMOIGNAGES */
+
+:root[data-design="terra"] .quote-card figcaption {
+  border-top: 0;
+  padding-top: var(--space-s);
+}
+:root[data-design="terra"] .quote-card figcaption::before {
+  content: '';
+  display: block;
+  width: 3.5rem;
+  height: 2px;
+  margin-bottom: var(--space-xs);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--c-accent) 45%, transparent);
+}
+:root[data-design="terra"] .quote-card__name { letter-spacing: 0.06em; }
+
+/* ------------------------------------------------------------- EN-TÊTE */
+
+:root[data-design="terra"] .site-header {
+  border-bottom: 0;
+  background: color-mix(in srgb, var(--c-bg) 84%, transparent);
+  box-shadow: 0 14px 30px -28px var(--c-shadow);
+}
+:root[data-design="terra"] .brand__mark {
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  box-shadow: var(--terra-lift), var(--shadow-s);
+}
+:root[data-design="terra"] .brand__name {
+  text-transform: none;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+:root[data-design="terra"] .nav__link {
+  border-radius: var(--radius-pill);
+  text-transform: none;
+  letter-spacing: 0.005em;
+  font-weight: 600;
+  transition: color var(--transition), background-color var(--transition);
+}
+:root[data-design="terra"] .nav__link::after { display: none; }
+:root[data-design="terra"] .nav__link:hover {
+  color: var(--c-accent-bright);
+  background: color-mix(in srgb, var(--c-accent) 11%, transparent);
+}
+:root[data-design="terra"] .nav__link[aria-current='page'] {
+  color: var(--c-accent-bright);
+  background: color-mix(in srgb, var(--c-accent) 15%, transparent);
+}
+:root[data-design="terra"] .burger {
+  border-radius: 50%;
+  border-color: transparent;
+  background: var(--c-surface);
+  box-shadow: var(--shadow-s);
+}
+:root[data-design="terra"] .burger:hover { border-color: transparent; color: var(--c-accent); }
+
+@media (max-width: 61.999em) {
+  /* En-tête opaque : un backdrop-filter créerait un bloc conteneur pour le
+     menu en position fixe, qui ne couvrirait plus tout l'écran. */
+  :root[data-design="terra"] .site-header {
+    background: var(--c-bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+  :root[data-design="terra"] .nav {
+    background-color: var(--c-bg-deep);
+    background-image:
+      radial-gradient(28rem 24rem at 92% 6%, color-mix(in srgb, var(--c-accent-2) 16%, transparent), transparent 62%),
+      radial-gradient(26rem 22rem at -10% 96%, color-mix(in srgb, var(--c-accent) 14%, transparent), transparent 62%);
+  }
+  :root[data-design="terra"] .nav__link {
+    border-bottom: 0;
+    border-radius: var(--radius-l);
+    padding: 0.55rem 0.9rem;
+    font-size: clamp(1.5rem, 7vw, 2rem);
+  }
+}
+
+/* ------------------------------------------------------------ PIED DE PAGE */
+
+:root[data-design="terra"] .site-footer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-top: var(--space-3xl);
+  padding-block: var(--space-3xl) var(--space-xl);
+  border-top: 0;
+  border-radius: 96px 28px 0 0;
+  background-color: var(--c-bg-deep);
+  background-image: none;
+}
+:root[data-design="terra"] .site-footer::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: -8%;
+  top: -18%;
+  width: 34%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-accent) 9%, transparent);
+  pointer-events: none;
+}
+:root[data-design="terra"] .site-footer::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -10%;
+  bottom: -30%;
+  width: 30%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--c-accent-2) 9%, transparent);
+  pointer-events: none;
+}
+:root[data-design="terra"] .footer__logo-mark {
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  box-shadow: var(--terra-lift), var(--shadow-s);
+}
+:root[data-design="terra"] .footer__logo { text-transform: none; letter-spacing: -0.02em; }
+:root[data-design="terra"] .footer__tagline {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: var(--step-0);
+}
+:root[data-design="terra"] .footer__social-link {
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--c-surface);
+  box-shadow: var(--shadow-xs);
+}
+:root[data-design="terra"] .footer__social-link:hover {
+  border-color: transparent;
+  box-shadow: var(--shadow-s);
+}
+:root[data-design="terra"] .footer__title { letter-spacing: 0.14em; }
+:root[data-design="terra"] .footer__bottom {
+  border-top: 0;
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-l);
+  position: relative;
+}
+:root[data-design="terra"] .footer__bottom::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--c-accent) 28%, transparent), transparent);
+}
+
+/* ------------------------------------------------------ PAGES INTERNES */
+
+/* Services — raccourcis et encart « pour qui » */
+:root[data-design="terra"] .hero__jump {
+  border-top: 0;
+  position: relative;
+  padding-top: var(--space-m);
+}
+:root[data-design="terra"] .hero__jump::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(22rem, 80%);
+  height: 1.1rem;
+  border: 0 solid color-mix(in srgb, var(--c-accent) 30%, transparent);
+  border-top-width: 2px;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+:root[data-design="terra"] .offer__for {
+  border-left: 0;
+  border-radius: var(--terra-r-s);
+  padding: var(--space-m);
+  background: color-mix(in srgb, var(--c-accent) 8%, var(--c-surface-2));
+}
+:root[data-design="terra"] .offer__label { letter-spacing: 0.12em; }
+:root[data-design="terra"] .offer__for-label { letter-spacing: 0.13em; }
+
+/* À propos — jalons reliés par un pointillé courbe */
+:root[data-design="terra"] .timeline > li:not(:last-child)::before {
+  left: 1.5rem;
+  top: 3.5rem;
+  width: 0;
+  background: none;
+  border-left: 3px dotted color-mix(in srgb, var(--c-accent) 42%, transparent);
+  opacity: 1;
+}
+:root[data-design="terra"] .pullquote {
+  position: relative;
+  border-left: 0;
+  margin-top: var(--space-2xl);
+  padding: var(--space-l) var(--space-xl);
+  border-radius: var(--terra-r-b);
+  background: color-mix(in srgb, var(--c-accent-2) 9%, var(--c-surface));
+  box-shadow: var(--shadow-s);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+/* Contact — tuiles et zone d'intervention */
+:root[data-design="terra"] .contact-tile__title,
+:root[data-design="terra"] .social-tile__title { letter-spacing: 0.11em; }
+:root[data-design="terra"] .contact-tile__value { line-height: 1.3; }
+:root[data-design="terra"] .contact-tile__action { letter-spacing: 0.1em; }
+:root[data-design="terra"] .zone-item {
+  border-left: 0;
+  border-radius: var(--terra-r-s);
+  padding: var(--space-s) var(--space-m);
+  background-color: var(--c-surface);
+  box-shadow: var(--shadow-xs);
+}
+:root[data-design="terra"] .zone-item:nth-child(even) { border-radius: 12px 32px 12px 32px; }
+:root[data-design="terra"] .zone-pin svg {
+  width: 4.2rem;
+  height: 4.2rem;
+}
+
+/* Réservation — module et coordonnées */
+:root[data-design="terra"] .booking-widget {
+  border: 0;
+  border-radius: var(--terra-r-blob);
+  box-shadow: var(--shadow-s);
+}
+:root[data-design="terra"] .coords {
+  border-top: 0;
+  margin-top: var(--space-2xs);
+  padding: var(--space-m);
+  border-radius: var(--terra-r-s);
+  background: color-mix(in srgb, var(--c-accent) 7%, var(--c-surface));
+}
+:root[data-design="terra"] .coords dt { letter-spacing: 0.12em; }
+
+/* Pages légales */
+:root[data-design="terra"] .legal__rows {
+  border-top: 0;
+  border-radius: var(--terra-r-s);
+  overflow: hidden;
+  background: var(--c-surface);
+  box-shadow: var(--shadow-xs);
+}
+:root[data-design="terra"] .legal__rows div {
+  border-bottom: 1px solid var(--c-border);
+  padding: var(--space-s) var(--space-m);
+}
+:root[data-design="terra"] .legal__rows div:last-child { border-bottom: 0; }
+
+/* --------------------------------------------------------- ACCESSIBILITÉ
+   Mouvement réduit : on neutralise les DURÉES *et* les DÉLAIS, sinon les
+   éléments à `animation-delay` (classes .delay-1…4, --reveal-delay)
+   resteraient invisibles. */
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-design="terra"] *,
+  :root[data-design="terra"] *::before,
+  :root[data-design="terra"] *::after {
+    animation-delay: 0s !important;
+    animation-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+    transition-duration: 0.001ms !important;
+  }
+  :root[data-design="terra"] .js .reveal,
+  :root[data-design="terra"] .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  :root[data-design="terra"] .card--hover:hover,
+  :root[data-design="terra"] a.card:hover,
+  :root[data-design="terra"] .btn:hover { transform: none; }
+}
+
+/* ------------------------------------------------------------- PETITS ÉCRANS */
+
+@media (max-width: 47.999em) {
+  :root[data-design="terra"] {
+    --terra-r-a: 34px 12px 34px 12px;
+    --terra-r-b: 12px 34px 12px 34px;
+    --terra-r-s: 24px 10px 24px 10px;
+    --terra-r-blob: 46px 18px 46px 18px;
+    --terra-r-visual: 64px 20px 64px 20px;
+  }
+  :root[data-design="terra"] .site-footer { border-radius: 56px 20px 0 0; }
+  :root[data-design="terra"] .card { padding: var(--space-m); }
+  :root[data-design="terra"] .card--pad-l { padding: var(--space-l) var(--space-m); }
+  :root[data-design="terra"] .faq__summary { padding: var(--space-s) var(--space-m); }
+}

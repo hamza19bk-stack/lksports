@@ -1,0 +1,233 @@
+---
+/**
+ * Home — hero, how we work, services preview, process, company record, FAQ, CTA.
+ * No copy in this file: everything comes from src/data/content.ts and site.ts.
+ */
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import CtaBand from '../components/CtaBand.astro';
+import CompanyRecord from '../components/CompanyRecord.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { home, ui } from '../data/content';
+import { isSet } from '../lib/utils';
+import { services } from '../data/content';
+import { hasCtaNote, hasCompanyRecord, visibleFaq, faqJsonLd } from '../lib/data';
+
+const t = home;
+const c = site.company;
+const faqItems = visibleFaq(t.faq.items);
+const serviceCards = services.filter((s) => isSet(s.title) && isSet(s.summary));
+---
+
+<Base title={t.seo.title} description={t.seo.description} path="/">
+  {faqItems.length > 0 && <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqJsonLd(faqItems))} />}
+
+  <section class="section section--tight hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="grid grid--sidebar grid--gap-l items-center">
+        <div class="stack stack--m">
+          <p class="eyebrow animate-fade-up">{t.hero.eyebrow}</p>
+          <h1 id="hero-title" class="display animate-fade-up delay-1">
+            {t.hero.titleLead}<br /><span class="mark">{t.hero.titleMark}</span>
+          </h1>
+          <p class="lead animate-fade-up delay-2">{t.hero.lead}</p>
+
+          <div class="cluster animate-fade-up delay-3">
+            <a class="btn btn--primary btn--lg" href="/contact">
+              <Icon name="mail" strokeWidth={1.9} />
+              {site.cta.label}
+            </a>
+            <a class="btn btn--ghost btn--lg" href="/services">{t.hero.secondaryCta}</a>
+          </div>
+
+          {hasCtaNote && <p class="note animate-fade-up delay-4" data-optional="cta-note">{site.cta.note}</p>}
+        </div>
+
+        {/* The hero panel shows the company's own register entry — no stock imagery. */}
+        <aside class="visual hero__card animate-fade" aria-label={t.hero.visualLabel}>
+          <p class="hero__card-label">{t.hero.visualLabel}</p>
+          {
+            isSet(c.number) && (
+              <p class="hero__card-number">
+                <span class="hero__card-number-label">{ui.recordLabels.number}</span>
+                <span class="hero__card-number-value">{c.number}</span>
+              </p>
+            )
+          }
+          <dl class="hero__card-rows">
+            {
+              isSet(c.legalName) && (
+                <div>
+                  <dt>{ui.recordLabels.legalName}</dt>
+                  <dd>{c.legalName}</dd>
+                </div>
+              )
+            }
+            {
+              isSet(c.placeOfRegistration) && (
+                <div>
+                  <dt>{ui.recordLabels.placeOfRegistration}</dt>
+                  <dd>{c.placeOfRegistration}</dd>
+                </div>
+              )
+            }
+            {
+              isSet(c.incorporated) && (
+                <div>
+                  <dt>{ui.recordLabels.incorporated}</dt>
+                  <dd>{c.incorporated}</dd>
+                </div>
+              )
+            }
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <Section id="approach" rule eyebrow={t.highlights.eyebrow} title={t.highlights.title} subtitle={t.highlights.subtitle}>
+    <ul class="grid grid--4 grid--gap-s list-reset">
+      {
+        t.highlights.items.map((item, i) => (
+          <li class="card card--hover reveal" style={`--reveal-delay: ${i * 90}ms`}>
+            <span class="icon-badge"><Icon name={item.icon} /></span>
+            <h3 class="card__title">{item.title}</h3>
+            <p class="card__text">{item.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  {
+    serviceCards.length > 0 && (
+      <Section id="services" variant="alt" eyebrow={t.services.eyebrow} title={t.services.title} subtitle={t.services.subtitle}>
+        <a slot="actions" class="btn btn--ghost" href="/services">
+          {t.services.moreLabel}
+          <Icon name="arrow-right" strokeWidth={2} />
+        </a>
+
+        <ul class="grid grid--2 list-reset">
+          {serviceCards.map((service, i) => (
+            <li class:list={['card card--pad-l card--hover reveal', { 'card--accent': i === 0 }]} style={`--reveal-delay: ${i * 90}ms`}>
+              <span class:list={['icon-badge', { 'icon-badge--2': i === serviceCards.length - 1 && i > 0 }]}>
+                <Icon name={service.icon} />
+              </span>
+              <h3 class="card__title">{service.title}</h3>
+              <p class="card__text">{service.summary}</p>
+              <p class="card__foot">
+                <a class="btn btn--ghost btn--sm" href={`/services#${service.id}`} aria-label={ui.servicesAnchorAria(service.title)}>
+                  {t.services.cardCta}
+                </a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </Section>
+    )
+  }
+
+  <Section id="process" rule eyebrow={t.process.eyebrow} title={t.process.title} subtitle={t.process.subtitle}>
+    <ol class="grid grid--4 grid--gap-s steps">
+      {
+        t.process.steps.map((step, i) => (
+          <li class:list={['card card--hover reveal', { 'card--featured': i === t.process.steps.length - 1 }]} style={`--reveal-delay: ${i * 90}ms`}>
+            <span class="step-number" aria-hidden="true">{i + 1}</span>
+            <h3 class="card__title"><span class="sr-only">{ui.stepPrefix(i + 1)}</span>{step.title}</h3>
+            <p class="card__text">{step.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  {
+    hasCompanyRecord && (
+      <Section id="company" variant="alt" eyebrow={t.record.eyebrow} title={t.record.title} subtitle={t.record.subtitle}>
+        <div class="reveal">
+          <CompanyRecord />
+        </div>
+      </Section>
+    )
+  }
+
+  {
+    faqItems.length > 0 && (
+      <Section id="faq" eyebrow={t.faq.eyebrow} title={t.faq.title} subtitle={t.faq.subtitle} width="narrow">
+        <Faq items={faqItems} moreHref="/contact" />
+      </Section>
+    )
+  }
+
+  <CtaBand
+    eyebrow={t.cta.eyebrow}
+    title={t.cta.title}
+    lead={t.cta.lead}
+    primaryHref="/contact"
+    secondaryLabel={t.cta.secondaryCta}
+    secondaryHref="/about"
+  />
+</Base>
+
+<style>
+  .hero__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding: var(--space-m);
+    min-height: 0;
+    box-shadow: var(--shadow-l);
+  }
+
+  .hero__card-label {
+    margin: 0;
+    font-family: var(--font-label);
+    font-size: var(--step-small);
+    font-weight: 500;
+    letter-spacing: var(--tracking-widest);
+    text-transform: var(--label-transform);
+    color: var(--c-text-muted);
+  }
+
+  .hero__card-number {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+    margin: 0;
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .hero__card-number-label {
+    font-family: var(--font-label);
+    font-size: var(--step-small);
+    letter-spacing: var(--tracking-wide);
+    text-transform: var(--label-transform);
+    color: var(--c-text-muted);
+  }
+  .hero__card-number-value {
+    font-family: var(--font-mono);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    color: var(--c-accent);
+  }
+
+  .hero__card-rows { display: grid; gap: var(--space-xs); margin: 0; }
+  .hero__card-rows div { display: grid; gap: 0.1em; }
+  .hero__card-rows dt {
+    font-family: var(--font-label);
+    font-size: var(--step-small);
+    letter-spacing: var(--tracking-wide);
+    text-transform: var(--label-transform);
+    color: var(--c-text-muted);
+  }
+  .hero__card-rows dd {
+    margin: 0;
+    font-size: var(--step-0);
+    color: var(--c-text);
+    overflow-wrap: anywhere;
+  }
+</style>

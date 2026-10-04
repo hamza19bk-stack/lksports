@@ -1,0 +1,9 @@
+---
+/** Privacy notice — content from content.legal.privacyNotice (UK GDPR, DPA 2018). */
+import LegalPage from '../components/LegalPage.astro';
+import { legal } from '../data/content';
+
+const t = legal.privacyNotice;
+---
+
+<LegalPage seo={t.seo} title={t.title} intro={t.intro} updated={t.updated} sections={t.sections} path="/privacy" />

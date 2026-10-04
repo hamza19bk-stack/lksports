@@ -1,0 +1,37 @@
+---
+/**
+ * CtaBand.astro — end-of-page call to action.
+ * The note (site.cta.note) is rendered only when it is filled in AND `note` is
+ * passed, so a page whose hero already shows it does not repeat it.
+ */
+import { site } from '../data/site';
+import { hasCtaNote } from '../lib/data';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  lead: string;
+  primaryHref: string;
+  secondaryLabel: string;
+  secondaryHref: string;
+  note?: boolean;
+}
+const { eyebrow, title, lead, primaryHref, secondaryLabel, secondaryHref, note = false } = Astro.props;
+---
+
+<section class="section section--tight" aria-labelledby="cta-title">
+  <div class="container">
+    <div class="callout reveal">
+      <div class="stack stack--m measure">
+        <p class="eyebrow">{eyebrow}</p>
+        <h2 id="cta-title">{title}</h2>
+        <p class="lead">{lead}</p>
+        <div class="cluster">
+          <a class="btn btn--primary btn--lg" href={primaryHref}>{site.cta.label}</a>
+          <a class="btn btn--ghost btn--lg" href={secondaryHref}>{secondaryLabel}</a>
+        </div>
+        {note && hasCtaNote && <p class="note" data-optional="cta-note">{site.cta.note}</p>}
+      </div>
+    </div>
+  </div>
+</section>

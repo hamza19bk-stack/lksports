@@ -1,0 +1,97 @@
+/* =========================================================================
+   THÈME « TERRA » — sable, argile et sauge, formes organiques
+   -------------------------------------------------------------------------
+   Pour l'utiliser : copie ce fichier à la place de src/styles/theme.css.
+   Les règles de contraste et la liste des jetons obligatoires sont
+   documentées en tête de theme-dark.example.css et vérifiées par
+   `npm run check` (ce fichier d'exemple est lui aussi contrôlé).
+
+   CONTRAT DES ACCENTS : les 7 lignes marquées « accent » plus bas sont
+   remplacées site par site (une valeur par ligne, jamais d'expression).
+   Partout ailleurs — ici comme dans variants/terra.css — toute couleur
+   dérivée d'un accent s'écrit var(--c-accent…) ou color-mix(...).
+   ========================================================================= */
+
+/* ---- Polices auto-hébergées (« Bricolage Grotesque Variable », « Manrope Variable ») ---- */
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/manrope';
+@import './variants/terra.css';
+
+:root {
+  --color-scheme: light;
+
+  /* ---- Fonds et surfaces (opaques) ---- */
+  --c-bg:        #F6EFE3;   /* sable chaud */
+  --c-bg-deep:   #EFE5D5;   /* pied de page, menu mobile */
+  --c-surface:   #FFFBF3;   /* crème : cartes, un cran plus clair que la page */
+  --c-surface-2: #F1E7D8;   /* puces, encarts */
+  --c-surface-3: #DCCDB5;   /* décor (barres du graphique) */
+
+  /* ---- Bordures et voiles (teintés argile, jamais de gris froid) ---- */
+  --c-border:        rgba(74, 46, 26, 0.10);
+  --c-border-strong: rgba(74, 46, 26, 0.20);
+  --c-overlay:       rgba(74, 46, 26, 0.05);
+  --c-overlay-alt:   color-mix(in srgb, var(--c-accent) 6%, transparent);
+  --c-grid-line:     rgba(74, 46, 26, 0.06);
+  --c-shadow:        rgba(74, 46, 26, 0.22);
+
+  /* ---- Textes ---- */
+  --c-text:       #2C221A;
+  --c-text-soft:  #4B3E33;
+  --c-text-muted: #6B5A4B;
+  --c-text-faint: #9B8975;  /* décor uniquement */
+
+  /* ---- Accents (7 lignes remplacées par site — une valeur par ligne) ---- */
+  --c-text-on-accent: #FFFFFF;
+  --c-accent:         #7C5A3C;
+  --c-accent-bright:  #64472D;
+  --c-accent-dim:     #C2A98E;
+  --c-accent-soft:    rgba(124, 90, 60, 0.12);
+  --c-accent-2:       #1F6F5C;
+  --c-accent-2-soft:  rgba(31, 111, 92, 0.12);
+
+  /* ---- Halos : la teinte suit les accents du site ---- */
+  --halo-1: var(--c-accent);
+  --halo-2: var(--c-accent-2);
+  --halo-strength: 1;
+
+  /* ---- Dégradés ---- */
+  --grad-accent:  linear-gradient(115deg, var(--c-accent) 0%, var(--c-accent-2) 100%);
+  --grad-surface: linear-gradient(165deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0) 62%);
+  --grad-line:    linear-gradient(90deg, transparent, var(--c-accent-dim), transparent);
+  --grad-visual:  linear-gradient(160deg, var(--c-surface), var(--c-surface-2));
+
+  /* ---- Ombres : très douces, larges, teintées argile ---- */
+  --shadow-xs: 0 1px 2px rgba(74, 46, 26, 0.05);
+  --shadow-s:  0 10px 26px -14px rgba(74, 46, 26, 0.30);
+  --shadow-m:  0 22px 46px -22px rgba(74, 46, 26, 0.36);
+  --shadow-l:  0 38px 80px -34px rgba(74, 46, 26, 0.42);
+  --shadow-accent: 0 16px 32px -16px color-mix(in srgb, var(--c-accent) 60%, transparent);
+  --ring: 0 0 0 4px color-mix(in srgb, var(--c-accent) 26%, transparent);
+
+  /* ---- Impression ---- */
+  --c-print-bg:   #FFFFFF;
+  --c-print-text: #000000;
+
+  /* ---- Polices ---- */
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-label: var(--font-body);     /* boutons, sur-titres, navigation */
+  --font-body: 'Manrope Variable', 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  /* ---- Rayons (généreux ; l'asymétrie est posée dans variants/terra.css) ---- */
+  --radius-xs: 10px;
+  --radius-s: 16px;
+  --radius-m: 22px;
+  --radius-l: 32px;
+  --radius-xl: 44px;
+  --radius-pill: 999px;
+  --radius-btn: var(--radius-pill);
+
+  /* ---- Variables de style ---- */
+  --heading-transform: none;
+  --heading-weight: 600;
+  --heading-tracking: -0.014em;
+  --display-leading: 1.14;
+  --label-transform: uppercase;
+}

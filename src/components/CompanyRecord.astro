@@ -1,0 +1,131 @@
+---
+/**
+ * CompanyRecord.astro — the public-register block.
+ *
+ * Renders only facts that are actually filled in (src/data/site.ts > company),
+ * followed by a link to the company's record at Companies House so a visitor
+ * can verify every line independently. Nothing here is marketing copy.
+ */
+import { site } from '../data/site';
+import { ui } from '../data/content';
+import { companyRows, sicRows, hasRegisterLink, hasRecordChecked } from '../lib/data';
+import { isSet } from '../lib/utils';
+
+interface Props {
+  /** Heading level used for the optional caption. Default: no caption. */
+  caption?: string;
+  compact?: boolean;
+}
+const { caption, compact = false } = Astro.props;
+const c = site.company;
+---
+
+<div class:list={['record', { 'record--compact': compact }]}>
+  {isSet(caption) && <p class="record__caption">{caption}</p>}
+
+  <dl class="record__rows">
+    {
+      companyRows.map((row) => (
+        <div class="record__row">
+          <dt>{row.label}</dt>
+          <dd>{row.value}</dd>
+        </div>
+      ))
+    }
+    {
+      sicRows.length > 0 && (
+        <div class="record__row">
+          <dt>{ui.recordLabels.sic}</dt>
+          <dd>
+            <ul class="record__sic">
+              {sicRows.map((s) => (
+                <li>
+                  <span class="record__sic-code">{s.code}</span>
+                  {s.label}
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+
+  {
+    hasRegisterLink && (
+      <p class="record__source">
+        {ui.recordSourceBefore}{' '}
+        <a href={c.companiesHouseUrl} target="_blank" rel="noopener noreferrer">
+          {ui.recordSourceLink}
+          <span class="sr-only"> {ui.newWindow}</span>
+        </a>
+        {hasRecordChecked && <Fragment>. {ui.recordCheckedBefore} {c.recordChecked}</Fragment>}.
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .record {
+    padding: var(--space-m);
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-m);
+  }
+  .record--compact { padding: var(--space-s); background: transparent; border: 0; border-radius: 0; }
+
+  .record__caption {
+    margin-bottom: var(--space-xs);
+    font-family: var(--font-label);
+    font-size: var(--step-small);
+    font-weight: 600;
+    letter-spacing: var(--tracking-widest);
+    text-transform: var(--label-transform);
+    color: var(--c-text-muted);
+  }
+
+  .record__rows {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid var(--c-border);
+  }
+  .record__row {
+    display: grid;
+    gap: var(--space-3xs) var(--space-m);
+    padding-block: var(--space-2xs);
+    border-bottom: 1px solid var(--c-border);
+  }
+  @media (min-width: 40em) {
+    .record__row { grid-template-columns: 14rem minmax(0, 1fr); }
+  }
+  .record__row dt {
+    font-family: var(--font-label);
+    font-size: var(--step-small);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: var(--label-transform);
+    color: var(--c-text-muted);
+  }
+  .record__row dd {
+    margin: 0;
+    color: var(--c-text);
+    overflow-wrap: anywhere;
+  }
+
+  .record__sic { display: grid; gap: var(--space-3xs); list-style: none; margin: 0; padding: 0; }
+  .record__sic li { display: flex; gap: var(--space-2xs); align-items: baseline; }
+  .record__sic-code {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: var(--step-small);
+    color: var(--c-accent);
+  }
+
+  .record__source {
+    margin-top: var(--space-s);
+    font-size: var(--step-small);
+    color: var(--c-text-muted);
+  }
+  .record__source a { color: var(--c-accent); }
+</style>

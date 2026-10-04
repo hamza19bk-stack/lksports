@@ -1,0 +1,9 @@
+---
+/** Legal notice — content from content.legal.legalNotice, values from site.company. */
+import LegalPage from '../components/LegalPage.astro';
+import { legal } from '../data/content';
+
+const t = legal.legalNotice;
+---
+
+<LegalPage seo={t.seo} title={t.title} intro={t.intro} updated={t.updated} sections={t.sections} path="/legal-notice" />

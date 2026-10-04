@@ -1,0 +1,99 @@
+---
+/**
+ * Services — one block per service, each anchored so the home page can link
+ * straight to it (/services#id).
+ */
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { servicesPage, services } from '../data/content';
+import { isSet } from '../lib/utils';
+
+const t = servicesPage;
+const items = services.filter((s) => isSet(s.title) && isSet(s.summary));
+---
+
+<Base title={t.seo.title} description={t.seo.description} path="/services">
+  <section class="section section--tight hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="stack stack--m measure">
+        <p class="eyebrow animate-fade-up">{t.hero.eyebrow}</p>
+        <h1 id="hero-title" class="display animate-fade-up delay-1">
+          {t.hero.titleLead}<br /><span class="mark">{t.hero.titleMark}</span>
+        </h1>
+        <p class="lead animate-fade-up delay-2">{t.hero.lead}</p>
+        <div class="cluster animate-fade-up delay-3">
+          <a class="btn btn--primary btn--lg" href="/contact">{site.cta.label}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {
+    items.map((service, i) => (
+      <Section
+        id={service.id}
+        variant={i % 2 === 1 ? 'alt' : 'default'}
+        rule={i === 0}
+        title={service.title}
+        subtitle={service.summary}
+      >
+        <div class="grid grid--sidebar grid--gap-l items-start">
+          <ul class="service__points list-reset reveal">
+            {service.points.filter((p) => isSet(p)).map((point) => (
+              <li class="service__point">
+                <span class="service__tick" aria-hidden="true"><Icon name="check-doc" strokeWidth={2} /></span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+          <aside class="card card--flat service__aside reveal">
+            <span class="icon-badge"><Icon name={service.icon} /></span>
+            <p class="card__text">{t.quoteNote}</p>
+            <p class="card__foot">
+              <a class="btn btn--primary btn--sm" href="/contact">{site.cta.label}</a>
+            </p>
+          </aside>
+        </div>
+      </Section>
+    ))
+  }
+
+  <CtaBand
+    eyebrow={t.cta.eyebrow}
+    title={t.cta.title}
+    lead={t.cta.lead}
+    primaryHref="/contact"
+    secondaryLabel={t.cta.secondaryCta}
+    secondaryHref="/about"
+  />
+</Base>
+
+<style>
+  .service__points { display: grid; gap: var(--space-s); }
+  .service__point {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-xs);
+    align-items: start;
+    font-size: var(--step-1);
+    color: var(--c-text-soft);
+  }
+  .service__tick {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex: none;
+    margin-top: 0.1em;
+    color: var(--c-accent);
+    background: var(--c-accent-soft);
+    border-radius: var(--radius-s);
+  }
+  .service__tick :global(svg) { width: 1rem; height: 1rem; }
+
+  .service__aside { display: flex; flex-direction: column; gap: var(--space-xs); align-self: start; }
+</style>

@@ -1,0 +1,966 @@
+/* =========================================================================
+   VARIANTE « AURORA » — nuit profonde, verre et lumière
+   -------------------------------------------------------------------------
+   Tous les sélecteurs sont préfixés par :root[data-design="aurora"] afin de
+   l'emporter sur global.css et sur les styles scopés d'Astro.
+   Aucune couleur littérale d'accent : var(--c-accent…) ou color-mix().
+   Texte sur fond d'accent : var(--c-text-on-accent).
+   ========================================================================= */
+
+/* ------------------------------------------------------------ FONDATIONS */
+
+:root[data-design="aurora"] {
+  /* Voiles de verre (translucides, sans teinte d'accent) */
+  --au-glass: linear-gradient(
+    152deg,
+    color-mix(in srgb, var(--c-text) 13%, transparent),
+    color-mix(in srgb, var(--c-text) 4.5%, transparent) 52%,
+    color-mix(in srgb, var(--c-text) 2.5%, transparent) 100%
+  );
+  --au-glass-soft: linear-gradient(
+    152deg,
+    color-mix(in srgb, var(--c-text) 7%, transparent),
+    color-mix(in srgb, var(--c-text) 2.5%, transparent) 60%,
+    color-mix(in srgb, var(--c-text) 1.5%, transparent) 100%
+  );
+  /* Bordure 1px lumineuse : blanc translucide en haut, accent en bas */
+  --au-edge: linear-gradient(
+    148deg,
+    color-mix(in srgb, var(--c-text) 72%, transparent) 0%,
+    color-mix(in srgb, var(--c-text) 28%, transparent) 26%,
+    color-mix(in srgb, var(--c-accent) 24%, transparent) 58%,
+    color-mix(in srgb, var(--c-accent) 58%, transparent) 100%
+  );
+  --au-edge-accent: linear-gradient(
+    148deg,
+    color-mix(in srgb, var(--c-accent) 78%, transparent) 0%,
+    color-mix(in srgb, var(--c-text) 18%, transparent) 42%,
+    color-mix(in srgb, var(--c-accent-2) 70%, transparent) 100%
+  );
+  --au-blur: blur(18px) saturate(140%);
+  --au-cast: 0 26px 64px -34px var(--c-shadow), 0 10px 34px -26px color-mix(in srgb, var(--c-accent) 55%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--c-text) 12%, transparent);
+  --au-cast-lift: 0 38px 86px -38px var(--c-shadow), 0 18px 52px -26px color-mix(in srgb, var(--c-accent) 62%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--c-text) 16%, transparent);
+  /* Grain très léger, posé au-dessus des dégradés de fond */
+  --au-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.24'/%3E%3C/svg%3E");
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.68;
+  --header-h: 70px;
+  --border-1: 1px solid var(--c-border);
+  font-synthesis: none;
+}
+
+@media (min-width: 60em) {
+  :root[data-design="aurora"] { --header-h: 84px; }
+}
+
+/* Fond : grands dégradés radiaux diffus + grain */
+:root[data-design="aurora"] body {
+  background-color: var(--c-bg);
+  background-image:
+    var(--au-grain),
+    radial-gradient(72rem 46rem at 6% -16%, color-mix(in srgb, var(--halo-1) calc(var(--halo-strength) * 30%), transparent), transparent 62%),
+    radial-gradient(62rem 42rem at 98% -4%, color-mix(in srgb, var(--halo-2) calc(var(--halo-strength) * 26%), transparent), transparent 60%),
+    radial-gradient(76rem 44rem at 44% 52%, color-mix(in srgb, var(--halo-1) calc(var(--halo-strength) * 12%), transparent), transparent 64%),
+    radial-gradient(64rem 40rem at 84% 106%, color-mix(in srgb, var(--halo-2) calc(var(--halo-strength) * 20%), transparent), transparent 62%);
+  background-size: 200px 200px, auto, auto, auto, auto;
+  background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed, fixed, fixed;
+  letter-spacing: 0.002em;
+}
+
+/* ----------------------------------------------------------- TYPOGRAPHIE */
+
+:root[data-design="aurora"] :is(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4) {
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.028em;
+  hyphens: manual;
+  overflow-wrap: normal;
+}
+
+:root[data-design="aurora"] h1 {
+  font-size: clamp(2.5rem, 1.7rem + 3.4vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+:root[data-design="aurora"] .display {
+  font-size: clamp(2.4rem, 1.65rem + 3.1vw, 4rem);
+  font-weight: 800;
+  line-height: var(--display-leading);
+  letter-spacing: -0.038em;
+}
+:root[data-design="aurora"] h2,
+:root[data-design="aurora"] .h2 {
+  font-size: clamp(2rem, 1.5rem + 2.1vw, 3.2rem);
+  font-weight: 750;
+  line-height: 1.18;
+  letter-spacing: -0.032em;
+}
+:root[data-design="aurora"] .h3 { font-size: clamp(1.6rem, 1.35rem + 1.1vw, 2.3rem); }
+:root[data-design="aurora"] h3,
+:root[data-design="aurora"] .card__title {
+  font-size: clamp(1.28rem, 1.16rem + 0.5vw, 1.55rem);
+  font-weight: 700;
+  line-height: 1.26;
+  letter-spacing: -0.018em;
+}
+:root[data-design="aurora"] h4,
+:root[data-design="aurora"] .h4 {
+  font-size: clamp(1.15rem, 1.06rem + 0.38vw, 1.35rem);
+  font-weight: 650;
+}
+
+/* Mot mis en valeur : dégradé accent -> accent-2 appliqué au texte */
+:root[data-design="aurora"] .mark {
+  color: var(--c-accent);
+  background-image: linear-gradient(104deg, var(--c-accent) 6%, var(--c-accent-2) 94%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding-inline-end: 0.07em;
+}
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  :root[data-design="aurora"] .mark { -webkit-text-fill-color: currentColor; }
+}
+
+:root[data-design="aurora"] .lead {
+  font-size: clamp(1.06rem, 1rem + 0.35vw, 1.25rem);
+  line-height: 1.66;
+  color: var(--c-text-soft);
+}
+:root[data-design="aurora"] strong,
+:root[data-design="aurora"] b { font-weight: 650; }
+
+/* Sur-titres : capitales fines, pastille lumineuse */
+:root[data-design="aurora"] .eyebrow {
+  gap: 0.65em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+:root[data-design="aurora"] .eyebrow::before,
+:root[data-design="aurora"] .section__head--center .eyebrow::after {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-accent) 16%, transparent);
+}
+:root[data-design="aurora"] .eyebrow--plain::before { display: none; }
+
+:root[data-design="aurora"] :where(main) a:not([class]) { text-underline-offset: 0.24em; }
+
+/* ---------------------------------------------------------------- FOCUS */
+
+:root[data-design="aurora"] :focus-visible {
+  outline: 2px solid var(--c-accent-bright);
+  outline-offset: 3px;
+  border-radius: var(--radius-s);
+}
+:root[data-design="aurora"] .btn:focus-visible {
+  outline: 2px solid var(--c-accent-bright);
+  outline-offset: 4px;
+  box-shadow: var(--ring);
+}
+
+/* ------------------------------------------------------------- EN-TÊTE */
+
+:root[data-design="aurora"] .site-header {
+  padding-inline: clamp(1rem, 0.45rem + 2.4vw, 2.5rem);
+  background: color-mix(in srgb, var(--c-bg) 62%, transparent);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border-bottom: 0;
+}
+:root[data-design="aurora"] .site-header::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--c-text) 18%, transparent) 22%,
+    color-mix(in srgb, var(--c-accent) 34%, transparent) 55%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+:root[data-design="aurora"] .brand {
+  gap: 0.7rem;
+  font-size: clamp(1.15rem, 1.05rem + 0.35vw, 1.35rem);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+:root[data-design="aurora"] .brand__mark {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--c-text-on-accent);
+  background-color: var(--c-accent);
+  background-image: linear-gradient(140deg, var(--c-accent), var(--c-accent-2));
+  border-radius: 11px;
+  box-shadow: 0 8px 22px -10px color-mix(in srgb, var(--c-accent) 85%, transparent);
+}
+:root[data-design="aurora"] .brand__name { padding-top: 0; }
+:root[data-design="aurora"] .brand:hover .brand__mark { transform: translateY(-1px) scale(1.04); }
+
+:root[data-design="aurora"] .nav__link {
+  padding: 0.5rem 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 550;
+  letter-spacing: 0;
+  text-transform: none;
+  border-radius: var(--radius-pill);
+  transition: color var(--transition), background-color var(--transition);
+}
+:root[data-design="aurora"] .nav__link::after { display: none; }
+:root[data-design="aurora"] .nav__link:hover {
+  color: var(--c-text);
+  background: color-mix(in srgb, var(--c-text) 8%, transparent);
+}
+:root[data-design="aurora"] .nav__link[aria-current='page'] {
+  color: var(--c-accent);
+  background: color-mix(in srgb, var(--c-accent) 13%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--c-accent) 26%, transparent);
+}
+
+:root[data-design="aurora"] .burger {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  border-color: color-mix(in srgb, var(--c-text) 18%, transparent);
+  background: color-mix(in srgb, var(--c-text) 6%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+:root[data-design="aurora"] .burger:hover {
+  border-color: color-mix(in srgb, var(--c-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--c-accent) 12%, transparent);
+}
+
+@media (max-width: 61.999em) {
+  /* En-tête opaque : `backdrop-filter` crée un bloc conteneur pour les enfants
+     `position: fixed` — le menu plein écran resterait enfermé dans l'en-tête. */
+  :root[data-design="aurora"] .site-header {
+    background: var(--c-bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  :root[data-design="aurora"] .nav {
+    background-color: var(--c-bg-deep);
+    background-image:
+      radial-gradient(40rem 26rem at 82% 4%, color-mix(in srgb, var(--halo-1) 22%, transparent), transparent 64%),
+      radial-gradient(34rem 24rem at 6% 96%, color-mix(in srgb, var(--halo-2) 20%, transparent), transparent 62%);
+  }
+  :root[data-design="aurora"] .nav__list { gap: var(--space-3xs); }
+  :root[data-design="aurora"] .nav__link {
+    padding: 0.8rem 0.9rem;
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    border-bottom: 0;
+    border-radius: var(--radius-m);
+  }
+  :root[data-design="aurora"] .nav__cta {
+    align-self: stretch;
+    min-height: 54px;
+    font-size: 1rem;
+  }
+}
+
+/* -------------------------------------------------------------- BOUTONS */
+
+:root[data-design="aurora"] .btn {
+  gap: 0.55em;
+  padding: 0.95em 1.7em;
+  font-weight: 620;
+  font-size: var(--step--1);
+  letter-spacing: 0.005em;
+  text-transform: none;
+  border-radius: var(--radius-pill);
+  transition: transform var(--dur-fast) var(--ease), background-color var(--transition),
+    color var(--transition), border-color var(--transition), box-shadow var(--dur-slow) var(--ease-out);
+}
+:root[data-design="aurora"] .btn--lg { padding: 1.1em 2.05em; font-size: var(--step-0); min-height: 56px; }
+:root[data-design="aurora"] .btn--sm { padding: 0.7em 1.25em; }
+
+/* Primaire : pilule en dégradé, halo lumineux au survol */
+:root[data-design="aurora"] .btn--primary {
+  --btn-color: var(--c-text-on-accent);
+  background-color: var(--c-accent);
+  background-image: linear-gradient(104deg, var(--c-accent) 0%, var(--c-accent-2) 100%);
+  border-color: transparent;
+  box-shadow: 0 12px 30px -14px color-mix(in srgb, var(--c-accent) 85%, transparent);
+}
+:root[data-design="aurora"] .btn--primary:hover {
+  --btn-color: var(--c-text-on-accent);
+  background-color: var(--c-accent-bright);
+  background-image: linear-gradient(104deg, var(--c-accent-bright) 0%, var(--c-accent-2) 100%);
+  border-color: transparent;
+  box-shadow:
+    0 18px 46px -14px color-mix(in srgb, var(--c-accent) 95%, transparent),
+    0 0 0 6px color-mix(in srgb, var(--c-accent) 16%, transparent);
+}
+
+/* Secondaire : verre */
+:root[data-design="aurora"] .btn--ghost {
+  --btn-color: var(--c-text);
+  background-color: color-mix(in srgb, var(--c-text) 7%, transparent);
+  border-color: color-mix(in srgb, var(--c-text) 15%, transparent);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--c-text) 14%, transparent);
+}
+:root[data-design="aurora"] .btn--ghost:hover {
+  --btn-color: var(--c-text);
+  background-color: color-mix(in srgb, var(--c-text) 13%, transparent);
+  border-color: color-mix(in srgb, var(--c-accent) 50%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--c-text) 18%, transparent),
+    0 0 0 5px color-mix(in srgb, var(--c-accent) 12%, transparent);
+}
+
+:root[data-design="aurora"] .btn--quiet {
+  --btn-color: var(--c-text-soft);
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+:root[data-design="aurora"] .btn--quiet:hover {
+  --btn-color: var(--c-accent);
+  background-color: color-mix(in srgb, var(--c-accent) 10%, transparent);
+  box-shadow: none;
+}
+
+:root[data-design="aurora"] .btn svg { transition: transform var(--transition); }
+:root[data-design="aurora"] .btn--ghost:hover svg { transform: translateX(3px); }
+
+:root[data-design="aurora"] .skip-link {
+  color: var(--c-text-on-accent);
+  background-image: linear-gradient(104deg, var(--c-accent), var(--c-accent-2));
+  border-radius: var(--radius-pill);
+}
+
+/* ------------------------------------------------------------- SECTIONS */
+
+:root[data-design="aurora"] .section--alt {
+  background:
+    radial-gradient(72rem 34rem at 50% -8%, color-mix(in srgb, var(--c-accent) 10%, transparent), transparent 70%),
+    linear-gradient(
+      180deg,
+      transparent,
+      color-mix(in srgb, var(--c-text) 4%, transparent) 14%,
+      color-mix(in srgb, var(--c-text) 4%, transparent) 86%,
+      transparent
+    );
+}
+
+:root[data-design="aurora"] .section--panel {
+  background-color: transparent;
+  background-image: var(--au-glass-soft);
+  border-block: 1px solid color-mix(in srgb, var(--c-text) 10%, transparent);
+  backdrop-filter: var(--au-blur);
+  -webkit-backdrop-filter: var(--au-blur);
+}
+
+/* Séparateur : filet en dégradé qui s'estompe sur les bords */
+:root[data-design="aurora"] .section--rule::before {
+  height: 1px;
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--c-accent) 60%, transparent) 26%,
+    color-mix(in srgb, var(--c-accent-2) 60%, transparent) 74%,
+    transparent
+  );
+}
+:root[data-design="aurora"] .section--rule::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 16rem;
+  background: radial-gradient(48rem 14rem at 50% 0%, color-mix(in srgb, var(--c-accent) 11%, transparent), transparent 72%);
+  pointer-events: none;
+}
+
+:root[data-design="aurora"] .section__head { margin-bottom: var(--space-2xl); }
+:root[data-design="aurora"] .section__title { margin-top: var(--space-xs); max-width: 20ch; }
+:root[data-design="aurora"] .section__head--center .section__title { margin-inline: auto; }
+:root[data-design="aurora"] .section__subtitle {
+  margin-top: var(--space-s);
+  max-width: 56ch;
+  color: var(--c-text-soft);
+}
+
+/* ------------------------------------------------------------------ HERO */
+
+:root[data-design="aurora"] .hero {
+  padding-block-start: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  padding-block-end: clamp(3rem, 2rem + 4vw, 5.5rem);
+}
+/* `balance` répartit les lignes et coupe « à ton / rythme » : on laisse remplir. */
+:root[data-design="aurora"] .hero h1 { max-width: 22ch; text-wrap: pretty; }
+:root[data-design="aurora"] .hero .lead { max-width: 48ch; }
+
+/* Sur-titre du hero : pastille de verre */
+:root[data-design="aurora"] .hero .stack > .eyebrow:not(.eyebrow--plain) {
+  align-self: flex-start;
+  padding: 0.5em 1.1em 0.5em 0.9em;
+  background: color-mix(in srgb, var(--c-text) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-text) 13%, transparent);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+@media (min-width: 62em) {
+  :root[data-design="aurora"] .hero .grid--sidebar {
+    grid-template-columns: minmax(0, 1.22fr) minmax(0, 1fr);
+    column-gap: clamp(2rem, 1rem + 3vw, 4rem);
+  }
+}
+
+/* Le visuel du hero devient un objet lumineux */
+:root[data-design="aurora"] .hero__visual {
+  position: relative;
+  justify-content: flex-end;
+  padding: var(--space-l) var(--space-l) var(--space-l);
+  min-height: 27rem;
+  border: 1px solid transparent;
+  border-radius: 28px;
+  background-color: color-mix(in srgb, var(--c-bg) 90%, transparent);
+  background-image:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--c-text) 7%, transparent),
+      color-mix(in srgb, var(--c-text) 1.5%, transparent) 55%
+    ) padding-box,
+    var(--au-edge) border-box;
+  box-shadow: var(--au-cast-lift);
+  overflow: hidden;
+}
+:root[data-design="aurora"] .hero__visual::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  width: 104%;
+  aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 36% 30%, color-mix(in srgb, var(--c-accent) 100%, transparent) 0%, color-mix(in srgb, var(--c-accent) 52%, transparent) 26%, transparent 56%),
+    radial-gradient(circle at 72% 74%, color-mix(in srgb, var(--c-accent-2) 96%, transparent) 0%, color-mix(in srgb, var(--c-accent-2) 42%, transparent) 30%, transparent 60%),
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--c-accent) 26%, transparent) 0%, transparent 70%);
+  filter: blur(26px);
+  opacity: 0.78;
+  animation: au-orb 28s var(--ease) infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes au-orb {
+  0%   { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 0.68; }
+  50%  { transform: translate(-46%, -54%) scale(1.08) rotate(9deg); opacity: 0.86; }
+  100% { transform: translate(-54%, -47%) scale(1.02) rotate(-7deg); opacity: 0.74; }
+}
+
+/* Anneaux concentriques à la place de la trame carrée */
+:root[data-design="aurora"] .visual--grid::after {
+  background-image: repeating-radial-gradient(
+    circle at 50% 46%,
+    color-mix(in srgb, var(--c-text) 9%, transparent) 0 1px,
+    transparent 1px 3rem
+  );
+  background-size: auto;
+  -webkit-mask-image: radial-gradient(62% 62% at 50% 46%, currentColor 26%, transparent 80%);
+  mask-image: radial-gradient(62% 62% at 50% 46%, currentColor 26%, transparent 80%);
+}
+
+:root[data-design="aurora"] .hero__chart { position: relative; z-index: 1; }
+:root[data-design="aurora"] .hero__chart-grid { stroke: color-mix(in srgb, var(--c-text) 9%, transparent); }
+:root[data-design="aurora"] .hero__chart-bar { fill: color-mix(in srgb, var(--c-text) 14%, transparent); }
+:root[data-design="aurora"] .hero__chart-bar--on { fill: var(--c-accent); }
+:root[data-design="aurora"] .hero__chart-trend { stroke: var(--c-accent-2); stroke-width: 2.5; }
+:root[data-design="aurora"] .hero__chart-dot { fill: var(--c-accent-2); }
+:root[data-design="aurora"] .hero__chart-axis { stroke: color-mix(in srgb, var(--c-text) 22%, transparent); stroke-width: 1.5; }
+
+:root[data-design="aurora"] .hero__visual-label {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  padding: 0.5em 1em;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-text-soft);
+  background: color-mix(in srgb, var(--c-text) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-text) 12%, transparent);
+  border-radius: var(--radius-pill);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Visuels décoratifs (à propos, contact) : même matière lumineuse */
+:root[data-design="aurora"] .visual:not(.hero__visual) {
+  border: 1px solid transparent;
+  border-radius: 26px;
+  background-color: color-mix(in srgb, var(--c-bg-deep) 88%, transparent);
+  background-image:
+    radial-gradient(70% 60% at 26% 8%, color-mix(in srgb, var(--halo-1) 30%, transparent), transparent 62%) padding-box,
+    radial-gradient(64% 58% at 86% 96%, color-mix(in srgb, var(--halo-2) 26%, transparent), transparent 62%) padding-box,
+    linear-gradient(160deg, color-mix(in srgb, var(--c-text) 5%, transparent), transparent 62%) padding-box,
+    var(--au-edge) border-box;
+  box-shadow: var(--au-cast);
+}
+
+/* --------------------------------------------------------------- GRILLES */
+
+:root[data-design="aurora"] .grid:not(.grid--sidebar):not(.grid--sidebar-left) {
+  column-gap: clamp(1rem, 0.7rem + 1.1vw, 1.6rem);
+  row-gap: clamp(1.1rem, 0.8rem + 1.2vw, 1.8rem);
+}
+
+/* --------------------------------------------------------- PANNEAUX DE VERRE */
+
+:root[data-design="aurora"] .card {
+  padding: var(--space-l) var(--space-m);
+  border: 1px solid transparent;
+  border-radius: 22px;
+  background-color: transparent;
+  background-image: var(--au-glass) padding-box, var(--au-edge) border-box;
+  backdrop-filter: var(--au-blur);
+  -webkit-backdrop-filter: var(--au-blur);
+  box-shadow: var(--au-cast);
+  transition: transform var(--transition), box-shadow var(--dur-slow) var(--ease-out), background-image var(--transition);
+}
+:root[data-design="aurora"] .card--pad-l { padding: var(--space-xl) var(--space-l); }
+:root[data-design="aurora"] .card--flat {
+  background-image: var(--au-glass-soft) padding-box, var(--au-edge) border-box;
+  box-shadow: none;
+}
+
+:root[data-design="aurora"] .card--hover:hover,
+:root[data-design="aurora"] a.card:hover {
+  transform: translateY(-5px);
+  border-color: transparent;
+  box-shadow: var(--au-cast-lift);
+  background-image:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--c-text) 13%, transparent),
+      color-mix(in srgb, var(--c-accent) 6%, transparent) 60%,
+      color-mix(in srgb, var(--c-text) 2%, transparent) 100%
+    ) padding-box,
+    var(--au-edge-accent) border-box;
+}
+
+:root[data-design="aurora"] .card--accent {
+  background-image: var(--au-glass) padding-box, var(--au-edge-accent) border-box;
+}
+:root[data-design="aurora"] .card--accent::after {
+  inset-inline: 22%;
+  top: 0;
+  height: 2px;
+  background: var(--grad-accent);
+  box-shadow: 0 0 12px 0 color-mix(in srgb, var(--c-accent) 45%, transparent);
+}
+
+:root[data-design="aurora"] .card--featured {
+  background-image:
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--c-accent) 16%, transparent),
+      color-mix(in srgb, var(--c-text) 4%, transparent) 55%,
+      color-mix(in srgb, var(--c-accent-2) 8%, transparent) 100%
+    ) padding-box,
+    var(--au-edge-accent) border-box;
+  border-color: transparent;
+}
+:root[data-design="aurora"] .card--raised { box-shadow: var(--au-cast-lift); }
+
+:root[data-design="aurora"] .card__text { line-height: 1.66; }
+:root[data-design="aurora"] .card__foot { padding-top: var(--space-s); }
+
+/* Pastilles d'icône : verre teinté, halo doux */
+:root[data-design="aurora"] .icon-badge {
+  width: 3.1rem;
+  height: 3.1rem;
+  color: var(--c-accent);
+  background-color: color-mix(in srgb, var(--c-accent) 13%, transparent);
+  background-image: linear-gradient(145deg, color-mix(in srgb, var(--c-accent) 26%, transparent), transparent 72%);
+  border: 1px solid color-mix(in srgb, var(--c-accent) 32%, transparent);
+  border-radius: 17px;
+  box-shadow:
+    0 12px 26px -16px color-mix(in srgb, var(--c-accent) 80%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--c-text) 20%, transparent);
+}
+:root[data-design="aurora"] .icon-badge--2 {
+  color: var(--c-accent-2);
+  background-color: color-mix(in srgb, var(--c-accent-2) 13%, transparent);
+  background-image: linear-gradient(145deg, color-mix(in srgb, var(--c-accent-2) 26%, transparent), transparent 72%);
+  border-color: color-mix(in srgb, var(--c-accent-2) 32%, transparent);
+  box-shadow:
+    0 12px 26px -16px color-mix(in srgb, var(--c-accent-2) 80%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--c-text) 20%, transparent);
+}
+
+/* Numéros d'étape : pilule en dégradé */
+:root[data-design="aurora"] .step-number {
+  width: 2.9rem;
+  height: 2.9rem;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  color: var(--c-text-on-accent);
+  background-color: var(--c-accent);
+  background-image: linear-gradient(140deg, var(--c-accent), var(--c-accent-2));
+  box-shadow: 0 12px 28px -16px color-mix(in srgb, var(--c-accent) 90%, transparent);
+}
+
+/* Chiffres clés : valeur en dégradé */
+:root[data-design="aurora"] .stat__value {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--c-accent);
+  background-image: linear-gradient(104deg, var(--c-accent) 8%, var(--c-accent-2) 92%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  :root[data-design="aurora"] .stat__value { -webkit-text-fill-color: currentColor; }
+}
+:root[data-design="aurora"] .stat__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------- PUCES ET LISTES */
+
+:root[data-design="aurora"] .chip {
+  padding: 0.5em 1em;
+  font-weight: 550;
+  color: var(--c-text-soft);
+  background-color: color-mix(in srgb, var(--c-text) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c-text) 13%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+:root[data-design="aurora"] .chip--dot::before {
+  width: 0.45em;
+  height: 0.45em;
+  background: var(--c-accent);
+  box-shadow: 0 0 10px 1px color-mix(in srgb, var(--c-accent) 70%, transparent);
+}
+
+:root[data-design="aurora"] .list-check li::before {
+  background: color-mix(in srgb, var(--c-accent) 18%, transparent);
+  border-color: color-mix(in srgb, var(--c-accent) 50%, transparent);
+  box-shadow: 0 0 12px -2px color-mix(in srgb, var(--c-accent) 60%, transparent);
+}
+:root[data-design="aurora"] .list-no li::before {
+  background: color-mix(in srgb, var(--c-accent-2) 16%, transparent);
+  border-color: color-mix(in srgb, var(--c-accent-2) 45%, transparent);
+}
+:root[data-design="aurora"] .list-check li,
+:root[data-design="aurora"] .list-no li { line-height: 1.6; }
+
+/* ------------------------------------------------------------------- FAQ */
+
+:root[data-design="aurora"] .faq { gap: var(--space-2xs); }
+:root[data-design="aurora"] .faq__item {
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background-color: transparent;
+  background-image: var(--au-glass-soft) padding-box, var(--au-edge) border-box;
+  backdrop-filter: var(--au-blur);
+  -webkit-backdrop-filter: var(--au-blur);
+  transition: box-shadow var(--transition);
+}
+:root[data-design="aurora"] .faq__item[open] {
+  border-color: transparent;
+  background-image: var(--au-glass) padding-box, var(--au-edge-accent) border-box;
+  box-shadow: var(--au-cast);
+}
+:root[data-design="aurora"] .faq__summary { padding: var(--space-s) var(--space-m); min-height: 62px; }
+:root[data-design="aurora"] .faq__summary:hover {
+  background-color: color-mix(in srgb, var(--c-text) 5%, transparent);
+}
+:root[data-design="aurora"] .faq__q {
+  font-family: var(--font-display);
+  font-size: clamp(1.08rem, 1rem + 0.35vw, 1.25rem);
+  font-weight: 650;
+  letter-spacing: -0.018em;
+  line-height: 1.35;
+}
+:root[data-design="aurora"] .faq__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--c-accent);
+  background: color-mix(in srgb, var(--c-accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--c-accent) 32%, transparent);
+}
+:root[data-design="aurora"] .faq__item[open] .faq__icon {
+  box-shadow: 0 0 18px -2px color-mix(in srgb, var(--c-accent) 65%, transparent);
+}
+
+/* --------------------------------------------------- ENCARTS ET BANDEAU CTA */
+
+:root[data-design="aurora"] .callout {
+  position: relative;
+  padding: clamp(1.9rem, 1.3rem + 2.6vw, 3.4rem);
+  border: 1px solid transparent;
+  border-radius: 30px;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--c-bg-deep) 82%, transparent);
+  background-image:
+    radial-gradient(48rem 26rem at 8% -10%, color-mix(in srgb, var(--halo-1) 26%, transparent), transparent 64%) padding-box,
+    radial-gradient(40rem 24rem at 100% 116%, color-mix(in srgb, var(--halo-2) 26%, transparent), transparent 62%) padding-box,
+    linear-gradient(158deg, color-mix(in srgb, var(--c-text) 6%, transparent), transparent 60%) padding-box,
+    var(--au-edge-accent) border-box;
+  backdrop-filter: var(--au-blur);
+  -webkit-backdrop-filter: var(--au-blur);
+  box-shadow: var(--au-cast-lift);
+}
+
+:root[data-design="aurora"] section[aria-labelledby="cta-title"] { padding-block: var(--space-2xl); }
+:root[data-design="aurora"] section[aria-labelledby="cta-title"] h2 {
+  font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.5rem);
+  max-width: 17ch;
+}
+
+/* --------------------------------------------------------- PIED DE PAGE
+   Voile plus clair que le corps de page (--c-bg-deep), filet lumineux. */
+
+:root[data-design="aurora"] .site-footer {
+  position: relative;
+  margin-top: var(--space-3xl);
+  padding-block: clamp(3rem, 2.2rem + 3vw, 4.5rem) var(--space-l);
+  background-color: var(--c-bg-deep);
+  background-image:
+    radial-gradient(56rem 26rem at 16% 0%, color-mix(in srgb, var(--halo-1) 14%, transparent), transparent 66%),
+    radial-gradient(48rem 24rem at 92% 12%, color-mix(in srgb, var(--halo-2) 13%, transparent), transparent 64%);
+  border-top: 0;
+}
+:root[data-design="aurora"] .site-footer::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--c-accent) 55%, transparent) 30%,
+    color-mix(in srgb, var(--c-accent-2) 55%, transparent) 70%,
+    transparent
+  );
+}
+
+:root[data-design="aurora"] .footer__logo {
+  font-size: clamp(1.35rem, 1.2rem + 0.6vw, 1.6rem);
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  text-transform: none;
+}
+:root[data-design="aurora"] .footer__logo-mark {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--c-text-on-accent);
+  background-color: var(--c-accent);
+  background-image: linear-gradient(140deg, var(--c-accent), var(--c-accent-2));
+  border-radius: 11px;
+  box-shadow: 0 8px 22px -10px color-mix(in srgb, var(--c-accent) 85%, transparent);
+}
+:root[data-design="aurora"] .footer__tagline {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+:root[data-design="aurora"] .footer__title {
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+:root[data-design="aurora"] .footer__social-link {
+  border-radius: 14px;
+  background-color: color-mix(in srgb, var(--c-text) 6%, transparent);
+  border-color: color-mix(in srgb, var(--c-text) 13%, transparent);
+}
+:root[data-design="aurora"] .footer__social-link:hover {
+  border-color: color-mix(in srgb, var(--c-accent) 55%, transparent);
+  background-color: color-mix(in srgb, var(--c-accent) 13%, transparent);
+}
+:root[data-design="aurora"] .footer__bottom {
+  border-top-color: color-mix(in srgb, var(--c-text) 10%, transparent);
+}
+
+/* ----------------------------------------------------- PAGES INTÉRIEURES */
+
+/* Services */
+:root[data-design="aurora"] .hero__jump {
+  padding-top: var(--space-m);
+  border-top: 1px solid color-mix(in srgb, var(--c-text) 10%, transparent);
+}
+:root[data-design="aurora"] .offer__label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+:root[data-design="aurora"] .offer__for {
+  padding: var(--space-s) var(--space-m);
+  border-radius: 16px;
+  background-color: color-mix(in srgb, var(--c-accent) 9%, transparent);
+  border-left: 2px solid color-mix(in srgb, var(--c-accent) 55%, transparent);
+}
+:root[data-design="aurora"] .offer__for-label {
+  font-size: 0.74rem;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+/* À propos */
+:root[data-design="aurora"] .portrait__art { opacity: 0.92; }
+:root[data-design="aurora"] .portrait__plate {
+  border: 1px solid color-mix(in srgb, var(--c-text) 14%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--c-bg) 62%, transparent);
+  box-shadow: var(--au-cast);
+}
+:root[data-design="aurora"] .portrait__name { font-weight: 700; letter-spacing: -0.02em; }
+
+:root[data-design="aurora"] .timeline > li:not(:last-child)::before {
+  background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2) 60%, transparent);
+  opacity: 0.5;
+}
+
+:root[data-design="aurora"] .pullquote {
+  position: relative;
+  padding: var(--space-l) var(--space-l) var(--space-l) var(--space-xl);
+  border-left: 0;
+  border-radius: 22px;
+  font-size: clamp(1.35rem, 1.15rem + 0.9vw, 1.9rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.3;
+  background-image: var(--au-glass-soft);
+  border: 1px solid color-mix(in srgb, var(--c-text) 10%, transparent);
+}
+:root[data-design="aurora"] .pullquote::before {
+  content: '';
+  position: absolute;
+  left: var(--space-m);
+  top: var(--space-l);
+  bottom: var(--space-l);
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(180deg, var(--c-accent), var(--c-accent-2));
+  box-shadow: 0 0 16px 0 color-mix(in srgb, var(--c-accent) 55%, transparent);
+}
+
+/* Contact */
+:root[data-design="aurora"] .contact-tile__title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+:root[data-design="aurora"] .contact-tile__value {
+  font-size: clamp(1.3rem, 1.15rem + 0.6vw, 1.7rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+:root[data-design="aurora"] .contact-tile__action {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+:root[data-design="aurora"] .zone-item {
+  border-left: 2px solid color-mix(in srgb, var(--c-accent) 55%, transparent);
+  padding-left: var(--space-m);
+}
+:root[data-design="aurora"] .zone-pin :global(svg),
+:root[data-design="aurora"] .zone-pin svg {
+  filter: drop-shadow(0 14px 30px color-mix(in srgb, var(--c-accent) 55%, transparent));
+}
+:root[data-design="aurora"] .social-tile__title {
+  font-size: var(--step-1);
+  letter-spacing: -0.02em;
+  text-transform: none;
+}
+
+/* Réservation */
+:root[data-design="aurora"] .booking-widget {
+  border: 1px solid color-mix(in srgb, var(--c-text) 12%, transparent);
+  border-radius: 26px;
+  background-color: var(--c-surface);
+}
+:root[data-design="aurora"] .coords {
+  border-top-color: color-mix(in srgb, var(--c-text) 12%, transparent);
+}
+:root[data-design="aurora"] .coords dt {
+  font-size: 0.74rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* Pages légales */
+:root[data-design="aurora"] .prose h2 {
+  font-size: clamp(1.5rem, 1.3rem + 1vw, 2.1rem);
+  letter-spacing: -0.028em;
+}
+:root[data-design="aurora"] .legal__rows,
+:root[data-design="aurora"] .legal__rows div {
+  border-color: color-mix(in srgb, var(--c-text) 10%, transparent);
+}
+
+/* ------------------------------------------------------ MOBILE ET MOUVEMENT */
+
+@media (max-width: 47.999em) {
+  :root[data-design="aurora"] .hero div.cluster { flex-direction: column; align-items: stretch; row-gap: var(--space-2xs); }
+  :root[data-design="aurora"] .hero div.cluster > .btn { width: 100%; }
+  :root[data-design="aurora"] .hero__visual { min-height: 18rem; padding: var(--space-m); }
+  :root[data-design="aurora"] .card { padding: var(--space-m); }
+  :root[data-design="aurora"] .card--pad-l { padding: var(--space-l) var(--space-m); }
+  :root[data-design="aurora"] .callout { padding: var(--space-l) var(--space-m); }
+  :root[data-design="aurora"] .pullquote { padding: var(--space-m) var(--space-m) var(--space-m) var(--space-l); }
+  :root[data-design="aurora"] .pullquote::before { left: var(--space-s); top: var(--space-m); bottom: var(--space-m); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Neutralise aussi les DÉLAIS : sans cela, les éléments animés restent invisibles. */
+  :root[data-design="aurora"] *,
+  :root[data-design="aurora"] *::before,
+  :root[data-design="aurora"] *::after {
+    animation-delay: 0s !important;
+    transition-delay: 0s !important;
+  }
+  :root[data-design="aurora"] .hero__visual::before {
+    animation: none !important;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+  }
+  :root[data-design="aurora"] .btn--ghost:hover svg { transform: none; }
+  :root[data-design="aurora"] .card--hover:hover,
+  :root[data-design="aurora"] a.card:hover { transform: none; }
+}

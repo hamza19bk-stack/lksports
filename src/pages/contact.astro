@@ -1,0 +1,164 @@
+---
+/**
+ * Contact — the ways to reach the company, what to include in a first message,
+ * and the registered details. Any channel without a real value simply does not
+ * appear; nothing is invented to fill the grid.
+ */
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import CtaBand from '../components/CtaBand.astro';
+import CompanyRecord from '../components/CompanyRecord.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../data/site';
+import { contact as t, ui } from '../data/content';
+import { isSet } from '../lib/utils';
+import {
+  hasEmail,
+  hasPhone,
+  hasAddress,
+  hasArea,
+  hasHours,
+  hasResponse,
+  hasAnyContact,
+  hasCompanyRecord,
+  telHref,
+} from '../lib/data';
+
+const c = site.company;
+
+/** Contact cards, built only from values that exist. */
+const channels: { icon: string; label: string; value: string; href?: string }[] = [];
+if (hasEmail) channels.push({ icon: 'mail', label: ui.emailLabel, value: site.contact.email, href: `mailto:${site.contact.email}` });
+if (hasPhone) channels.push({ icon: 'phone', label: ui.phoneLabel, value: site.contact.phone, href: telHref });
+if (isSet(site.social.whatsapp)) channels.push({ icon: 'whatsapp', label: 'WhatsApp', value: 'WhatsApp', href: site.social.whatsapp });
+if (hasAddress) channels.push({ icon: 'pin', label: ui.addressLabel, value: site.contact.address });
+if (isSet(c.registeredOffice)) channels.push({ icon: 'pin', label: ui.officeLabel, value: c.registeredOffice });
+
+/** Supporting details shown as plain rows. */
+const details: { label: string; value: string }[] = [];
+if (hasArea) details.push({ label: ui.areaLabel, value: site.contact.area });
+if (hasHours) details.push({ label: ui.hoursLabel, value: site.contact.hours });
+if (hasResponse) details.push({ label: ui.responseLabel, value: site.contact.responseTime });
+
+const helpful = t.helpful.items.filter((i) => isSet(i));
+---
+
+<Base title={t.seo.title} description={t.seo.description} path="/contact">
+  <section class="section section--tight hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="stack stack--m measure">
+        <p class="eyebrow animate-fade-up">{t.hero.eyebrow}</p>
+        <h1 id="hero-title" class="display animate-fade-up delay-1">
+          {t.hero.titleLead}<br /><span class="mark">{t.hero.titleMark}</span>
+        </h1>
+        <p class="lead animate-fade-up delay-2">{t.hero.lead}</p>
+        {!hasAnyContact && <p class="note animate-fade-up delay-3">{t.noContactNote}</p>}
+      </div>
+    </div>
+  </section>
+
+  {
+    channels.length > 0 && (
+      <Section id="reach-us" rule title={t.channelsTitle}>
+        <ul class="grid grid--3 grid--gap-s list-reset">
+          {channels.map((channel, i) => (
+            <li class="card card--hover reveal" style={`--reveal-delay: ${i * 80}ms`}>
+              <span class="icon-badge"><Icon name={channel.icon} /></span>
+              <h3 class="card__title">{channel.label}</h3>
+              <p class="card__text">
+                {channel.href ? <a href={channel.href}>{channel.value}</a> : channel.value}
+              </p>
+            </li>
+          ))}
+        </ul>
+
+        {
+          details.length > 0 && (
+            <dl class="contact__details reveal">
+              {details.map((d) => (
+                <div>
+                  <dt>{d.label}</dt>
+                  <dd>{d.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+      </Section>
+    )
+  }
+
+  {
+    helpful.length > 0 && (
+      <Section id="useful" variant="alt" title={t.helpful.title} width="narrow">
+        <ul class="contact__helpful list-reset reveal">
+          {helpful.map((item) => (
+            <li>
+              <span class="contact__bullet" aria-hidden="true"></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </Section>
+    )
+  }
+
+  {
+    hasCompanyRecord && (
+      <Section id="company" rule title={t.recordTitle}>
+        <div class="reveal">
+          <CompanyRecord />
+        </div>
+      </Section>
+    )
+  }
+
+  <CtaBand
+    eyebrow={t.cta.eyebrow}
+    title={t.cta.title}
+    lead={t.cta.lead}
+    primaryHref="/contact"
+    secondaryLabel={t.cta.secondaryCta}
+    secondaryHref="/services"
+  />
+</Base>
+
+<style>
+  .contact__details {
+    display: grid;
+    gap: var(--space-xs) var(--space-l);
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--c-border);
+  }
+  @media (min-width: 48em) {
+    .contact__details { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  .contact__details dt {
+    font-family: var(--font-label);
+    font-size: var(--step-small);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: var(--label-transform);
+    color: var(--c-text-muted);
+  }
+  .contact__details dd { margin: 0; color: var(--c-text); }
+
+  .contact__helpful { display: grid; gap: var(--space-s); }
+  .contact__helpful li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: var(--space-xs);
+    align-items: baseline;
+    font-size: var(--step-1);
+    color: var(--c-text-soft);
+  }
+  .contact__bullet {
+    width: 0.6rem;
+    height: 0.6rem;
+    flex: none;
+    margin-top: 0.1em;
+    background: var(--c-accent);
+    border-radius: var(--radius-pill);
+  }
+</style>

@@ -1,0 +1,113 @@
+/* =========================================================================
+   THÈME — src/styles/theme.css  (variante « AURORA »)
+   -------------------------------------------------------------------------
+   Identité visuelle COMPLÈTE du site : couleurs, polices, rayons, ombres,
+   halos et variables de style. global.css et les composants ne contiennent
+   aucune couleur en dur : ils ne font que référencer ces jetons.
+
+   AURORA — nuit profonde bleutée, surfaces en verre, lumière colorée.
+   Le décor de la variante vit dans ./variants/aurora.css.
+
+   RÈGLES (vérifiées par `npm run check`) :
+   - tous les jetons listés dans scripts/check.mjs (REQUIRED_TOKENS) sont définis ;
+   - couleurs en hex, rgb()/rgba() ou hsl()/hsla(), éventuellement via var() ;
+   - --c-bg, --c-bg-deep, --c-surface, --c-surface-2 sont OPAQUES ;
+   - --c-text, --c-text-soft, --c-text-muted : contraste >= 4.5:1 sur
+     --c-bg, --c-bg-deep, --c-surface et --c-surface-2 ;
+   - --c-text-on-accent : >= 4.5:1 sur --c-accent et --c-accent-bright ;
+   - --c-accent : >= 3:1 sur --c-bg ; et comme il sert aussi de couleur de
+     texte (sur-titres, liens), il doit atteindre 4.5:1 sur les fonds ;
+   - tout jeton employé dans une déclaration `color:` : >= 4.5:1 sur les fonds.
+
+   CONTRAT DES ACCENTS : les sept lignes --c-accent, --c-accent-bright,
+   --c-accent-dim, --c-accent-soft, --c-accent-2, --c-accent-2-soft et
+   --c-text-on-accent tiennent chacune sur UNE seule ligne (un script les
+   remplace site par site). Partout ailleurs, toute couleur dérivée s'écrit
+   var(--c-accent…) ou color-mix(…), jamais la valeur littérale d'un accent.
+
+   POLICES : paquets npm auto-hébergés (aucune requête vers Google Fonts).
+   ========================================================================= */
+
+/* ---- Polices auto-hébergées (« Syne Variable » et « Instrument Sans Variable ») ---- */
+@import '@fontsource-variable/syne';
+@import '@fontsource-variable/instrument-sans';
+@import './variants/aurora.css';
+
+:root {
+  --color-scheme: dark;
+
+  /* ---- Fonds et surfaces (opaques) ---- */
+  --c-bg:        #0A0B14;   /* nuit profonde, bleutée */
+  --c-bg-deep:   #12142A;   /* voile plus clair : pied de page, menu mobile */
+  --c-surface:   #14162A;   /* cartes, panneaux */
+  --c-surface-2: #1D2039;   /* puces, encarts dans une carte */
+  --c-surface-3: #2A2E4D;   /* décor (barres du graphique) */
+
+  /* ---- Bordures et voiles (semi-transparents, adaptés au fond) ---- */
+  --c-border:        rgba(202, 210, 255, 0.12);
+  --c-border-strong: rgba(202, 210, 255, 0.26);
+  --c-overlay:       rgba(202, 210, 255, 0.08);   /* survol discret */
+  --c-overlay-alt:   rgba(202, 210, 255, 0.035);  /* bande des sections alternées */
+  --c-grid-line:     rgba(202, 210, 255, 0.055);  /* trame des visuels */
+  --c-shadow:        rgba(3, 4, 12, 0.72);        /* ombres portées (filter) */
+
+  /* ---- Textes ---- */
+  --c-text:           #EEF0FB;
+  --c-text-soft:      #C4C9E2;
+  --c-text-muted:     #A2A9C6;
+  --c-text-faint:     #6E7699;  /* décor uniquement, jamais du texte */
+  --c-text-on-accent: #05101C;
+
+  /* ---- Accents ---- */
+  --c-accent:         #7CC4FF;
+  --c-accent-bright:  #B7DEFF;
+  --c-accent-dim:     #3E7FB8;
+  --c-accent-soft:    rgba(124, 196, 255, 0.14);
+  --c-accent-2:       #C0A6FF;
+  --c-accent-2-soft:  rgba(192, 166, 255, 0.14);
+
+  /* ---- Halos lumineux (dégradés radiaux) ---- */
+  --halo-1: var(--c-accent);
+  --halo-2: var(--c-accent-2);
+  --halo-strength: 1.15;        /* 0 = aucun halo ; 1 = look d'origine */
+
+  /* ---- Dégradés ---- */
+  --grad-accent:  linear-gradient(110deg, var(--c-accent) 0%, var(--c-accent-2) 100%);
+  --grad-surface: linear-gradient(152deg, rgba(255, 255, 255, 0.085), rgba(255, 255, 255, 0.022) 46%, rgba(255, 255, 255, 0.008) 100%);
+  --grad-line:    linear-gradient(90deg, transparent, var(--c-accent-dim), transparent);
+  --grad-visual:  linear-gradient(158deg, #1A1D38, #0A0B14 72%);
+
+  /* ---- Ombres (douces et colorées, jamais dures) ---- */
+  --shadow-xs: 0 1px 2px rgba(3, 4, 12, 0.5);
+  --shadow-s:  0 8px 24px -14px rgba(3, 4, 12, 0.85);
+  --shadow-m:  0 20px 48px -24px rgba(3, 4, 12, 0.92);
+  --shadow-l:  0 40px 90px -42px rgba(3, 4, 12, 0.95);
+  --shadow-accent: 0 18px 46px -18px color-mix(in srgb, var(--c-accent) 62%, transparent);
+  --ring: 0 0 0 3px color-mix(in srgb, var(--c-accent) 38%, transparent);
+
+  /* ---- Impression ---- */
+  --c-print-bg:   #FFFFFF;
+  --c-print-text: #000000;
+
+  /* ---- Polices ---- */
+  --font-display: 'Syne Variable', 'Syne', system-ui, sans-serif;
+  --font-body: 'Instrument Sans Variable', 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-label: var(--font-body);   /* boutons, sur-titres, navigation */
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  /* ---- Rayons (grands, façon produit tech) ---- */
+  --radius-xs: 8px;
+  --radius-s: 12px;
+  --radius-m: 18px;
+  --radius-l: 24px;
+  --radius-xl: 30px;
+  --radius-pill: 999px;
+  --radius-btn: var(--radius-pill);
+
+  /* ---- Variables de style ---- */
+  --heading-transform: none;        /* titres h1/h2 : uppercase | none */
+  --heading-weight: 700;
+  --heading-tracking: -0.025em;
+  --display-leading: 1.2;          /* interlignage du grand titre d'accueil */
+  --label-transform: none;          /* boutons, navigation (les sur-titres passent en capitales dans la variante) */
+}

@@ -1,0 +1,265 @@
+---
+/**
+ * Footer.astro — brand, navigation, contact, statutory company disclosure,
+ * legal links.
+ *
+ * The "Company details" block satisfies section 82 of the Companies Act 2006
+ * and the Companies (Trading Disclosures) Regulations 2008, which require a
+ * limited company to state its registered name, company number, place of
+ * registration and registered office address on its website. The lines are
+ * built in src/lib/data.ts from src/data/site.ts and only appear once they
+ * hold real values.
+ */
+import { site } from '../data/site';
+import { ui } from '../data/content';
+import { isSet, phoneHref } from '../lib/utils';
+import { brandName, socialLinks, disclosureParts, hasEmail, hasPhone, hasArea, hasHours } from '../lib/data';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+const initials = brandName
+  .split(/[^A-Za-z0-9]+/)
+  .filter(Boolean)
+  .slice(0, 2)
+  .map((w) => w[0].toUpperCase())
+  .join('');
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <a class="footer__logo" href="/">
+          <span class="footer__logo-mark" aria-hidden="true">{initials}</span>
+          {brandName}
+        </a>
+        {isSet(site.brand.tagline) && <p class="footer__tagline">{site.brand.tagline}</p>}
+
+        {
+          socialLinks.length > 0 && (
+            <ul class="footer__social" aria-label={ui.socialLabel} data-optional="social">
+              {socialLinks.map((s) => (
+                <li>
+                  <a href={s.url} class="footer__social-link" target="_blank" rel="noopener noreferrer me">
+                    <span class="sr-only">{`${s.label} ${ui.newWindow}`}</span>
+                    <Icon name={s.key} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+
+      <nav class="footer__col" aria-labelledby="footer-nav-title">
+        <h2 class="footer__title" id="footer-nav-title">{ui.footerNavTitle}</h2>
+        <ul class="footer__list">
+          {
+            site.nav.map((link) => (
+              <li>
+                <a class="footer__link" href={link.href}>{link.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__title">{ui.footerContactTitle}</h2>
+        {
+          (hasEmail || hasPhone || hasArea || hasHours) && (
+            <ul class="footer__list">
+              {hasEmail && (
+                <li><a class="footer__link" href={`mailto:${site.contact.email}`}>{site.contact.email}</a></li>
+              )}
+              {hasPhone && (
+                <li><a class="footer__link" href={`tel:${phoneHref(site.contact.phone)}`}>{site.contact.phone}</a></li>
+              )}
+              {hasArea && <li class="footer__meta">{site.contact.area}</li>}
+              {hasHours && <li class="footer__meta">{site.contact.hours}</li>}
+            </ul>
+          )
+        }
+        <a class="btn btn--ghost btn--sm footer__cta" href="/contact">{site.cta.label}</a>
+      </div>
+    </div>
+
+    {
+      disclosureParts.length > 0 && (
+        <div class="footer__disclosure">
+          <h2 class="footer__title">{ui.footerCompanyTitle}</h2>
+          <p class="footer__disclosure-text">{disclosureParts.join('. ')}.</p>
+        </div>
+      )
+    }
+
+    <div class="footer__bottom">
+      <nav aria-label={ui.footerLegalLabel}>
+        <ul class="footer__legal-links">
+          {
+            site.legalNav.map((link) => (
+              <li><a class="footer__link footer__link--small" href={link.href}>{link.label}</a></li>
+            ))
+          }
+        </ul>
+      </nav>
+      <p class="footer__legal">© {year} {brandName}. {ui.rights}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-3xl);
+    padding-block: var(--space-2xl) var(--space-l);
+    background-color: var(--c-bg-deep);
+    background-image: radial-gradient(48rem 24rem at 85% 0%, color-mix(in srgb, var(--halo-1) calc(var(--halo-strength) * 7%), transparent), transparent 60%);
+    border-top: 1px solid var(--c-border);
+  }
+
+  .footer__top {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 48em) {
+    .footer__top { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 62em) {
+    .footer__top {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr) minmax(0, 1fr);
+      gap: var(--space-2xl);
+    }
+  }
+
+  .footer__brand { display: flex; flex-direction: column; gap: var(--space-xs); }
+
+  .footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    align-self: flex-start;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: var(--label-transform);
+    text-decoration: none;
+    color: var(--c-text);
+    line-height: 1;
+  }
+  .footer__logo-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    flex: none;
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--c-text-on-accent);
+    background: var(--c-accent);
+    border-radius: var(--radius-s);
+  }
+
+  .footer__tagline {
+    font-family: var(--font-label);
+    font-size: var(--step-0);
+    letter-spacing: var(--tracking-wide);
+    text-transform: var(--label-transform);
+    color: var(--c-accent);
+  }
+
+  .footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+    margin-top: var(--space-2xs);
+    list-style: none;
+    padding: 0;
+  }
+  .footer__social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    color: var(--c-text-soft);
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-s);
+    transition: color var(--transition), border-color var(--transition), transform var(--transition);
+  }
+  .footer__social-link :global(svg) { width: 1.25rem; height: 1.25rem; }
+  .footer__social-link:hover {
+    color: var(--c-accent);
+    border-color: var(--c-accent);
+    transform: translateY(-2px);
+  }
+
+  .footer__col { display: flex; flex-direction: column; gap: var(--space-xs); }
+
+  .footer__title {
+    font-family: var(--font-label);
+    font-size: var(--step-small);
+    font-weight: 600;
+    letter-spacing: var(--tracking-widest);
+    text-transform: var(--label-transform);
+    color: var(--c-text-muted);
+  }
+
+  .footer__list { display: grid; gap: var(--space-3xs); list-style: none; margin: 0; padding: 0; }
+
+  .footer__link {
+    display: inline-block;
+    padding-block: 0.35rem;
+    font-size: var(--step-0);
+    text-decoration: none;
+    color: var(--c-text-soft);
+    transition: color var(--transition);
+    overflow-wrap: anywhere;
+  }
+  .footer__link:hover { color: var(--c-accent); text-decoration: underline; text-underline-offset: 0.2em; }
+  .footer__link--small { font-size: var(--step-small); }
+
+  .footer__meta { padding-block: 0.35rem; color: var(--c-text-muted); font-size: var(--step-small); }
+
+  .footer__cta { align-self: flex-start; margin-top: var(--space-2xs); }
+
+  .footer__disclosure {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--c-border);
+  }
+  .footer__disclosure-text {
+    max-width: 90ch;
+    font-size: var(--step-small);
+    color: var(--c-text-muted);
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin-top: var(--space-l);
+    padding-top: var(--space-m);
+    border-top: 1px solid var(--c-border);
+  }
+  .footer__legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-m);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .footer__legal { font-size: var(--step-small); color: var(--c-text-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer__social-link:hover { transform: none; }
+  }
+</style>

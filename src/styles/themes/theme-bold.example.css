@@ -1,0 +1,103 @@
+/* =========================================================================
+   THÈME « BOLD » — néo-brutaliste : papier clair, encre noire, aplats d'accent
+   -------------------------------------------------------------------------
+   Variante de mise en page : src/styles/variants/bold.css (site.ts : design: 'bold').
+   Les règles de contraste et la liste des jetons obligatoires sont
+   documentées en tête de theme-dark.example.css et vérifiées par
+   `npm run check`.
+
+   CONTRAT DES ACCENTS : les 7 jetons --c-accent, --c-accent-bright,
+   --c-accent-dim, --c-accent-soft, --c-accent-2, --c-accent-2-soft et
+   --c-text-on-accent tiennent chacun sur UNE ligne (remplacés par site).
+   Partout ailleurs, une couleur dérivée d'un accent s'écrit var(--c-accent…)
+   ou color-mix(in srgb, var(--c-accent…) N%, …).
+     · --c-accent et --c-accent-2 : texte >= 4.5:1 sur les 4 fonds clairs ;
+     · --c-accent-bright : survol, plus foncé que --c-accent ;
+     · --c-accent-soft / --c-accent-2-soft : teintes claires OPAQUES
+       (aplats de sections, étiquettes) sur lesquelles se pose --c-text ;
+     · --c-text-on-accent : texte sur --c-accent et --c-accent-bright.
+   ========================================================================= */
+
+/* ---- Polices auto-hébergées (« Anton » et « Archivo Variable », axes graisse + chasse) ---- */
+@import '@fontsource/anton';
+@import '@fontsource-variable/archivo/wdth.css';
+@import './variants/bold.css';
+
+:root {
+  --color-scheme: light;
+
+  /* ---- Fonds et surfaces (opaques, très clairs : les accents y restent lisibles) ---- */
+  --c-bg:        #FFF8E6;   /* papier affiche */
+  --c-bg-deep:   #FFF3D6;   /* menu mobile */
+  --c-surface:   #FFFFFF;   /* cartes */
+  --c-surface-2: #FFF4DA;   /* puces, encarts */
+  --c-surface-3: #0F0E0C;   /* décor (barres du graphique) : encre */
+
+  /* ---- Bordures et voiles : encre pleine ---- */
+  --c-border:        #0F0E0C;
+  --c-border-strong: #0F0E0C;
+  --c-overlay:       rgba(15, 14, 12, 0.06);
+  --c-overlay-alt:   rgba(15, 14, 12, 0.04);
+  --c-grid-line:     rgba(15, 14, 12, 0.10);
+  --c-shadow:        #0F0E0C;   /* ombres dures, sans flou */
+
+  /* ---- Textes ---- */
+  --c-text:           #0F0E0C;
+  --c-text-soft:      #2C2924;
+  --c-text-muted:     #4F4A42;
+  --c-text-faint:     #8C857A;  /* décor uniquement */
+  --c-text-on-accent: #FFFFFF;
+
+  /* ---- Accents (une ligne chacun) ---- */
+  --c-accent: #1E3A8A;
+  --c-accent-bright: #172F70;
+  --c-accent-dim: #8FA3DA;
+  --c-accent-soft: #DDE5FA;
+  --c-accent-2: #8F5B00;
+  --c-accent-2-soft: #FCD34D;
+
+  /* ---- Halos : désactivés (aucun flou dans cette variante) ---- */
+  --halo-1: var(--c-accent);
+  --halo-2: var(--c-accent-2);
+  --halo-strength: 0;
+
+  /* ---- « Dégradés » : aplats nets ---- */
+  --grad-accent:  linear-gradient(90deg, var(--c-accent), var(--c-accent));
+  --grad-surface: none;
+  --grad-line:    linear-gradient(90deg, var(--c-border-strong), var(--c-border-strong));
+  --grad-visual:  linear-gradient(var(--c-surface), var(--c-surface));
+
+  /* ---- Ombres dures décalées (0 flou) ---- */
+  --shadow-xs: 2px 2px 0 #0F0E0C;
+  --shadow-s:  4px 4px 0 #0F0E0C;
+  --shadow-m:  6px 6px 0 #0F0E0C;
+  --shadow-l:  10px 10px 0 #0F0E0C;
+  --shadow-accent: 5px 5px 0 #0F0E0C;
+  --ring: 0 0 0 3px #0F0E0C;
+
+  /* ---- Impression ---- */
+  --c-print-bg:   #FFFFFF;
+  --c-print-text: #000000;
+
+  /* ---- Polices ---- */
+  --font-display: 'Anton', 'Haettenschweiler', 'Impact', 'Arial Narrow', sans-serif;
+  --font-label: var(--font-body);     /* boutons, sur-titres, navigation */
+  --font-body: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, Consolas, monospace;
+
+  /* ---- Rayons : angles vifs ---- */
+  --radius-xs: 0;
+  --radius-s: 0;
+  --radius-m: 0;
+  --radius-l: 0;
+  --radius-xl: 0;
+  --radius-pill: 999px;
+  --radius-btn: 0;
+
+  /* ---- Variables de style ---- */
+  --heading-transform: uppercase;
+  --heading-weight: 400;
+  --heading-tracking: 0.01em;
+  --display-leading: 0.9;
+  --label-transform: uppercase;
+}

@@ -1,0 +1,76 @@
+---
+/**
+ * About — how the company works, what it holds to, and the full register entry.
+ */
+import Base from '../layouts/Base.astro';
+import Section from '../components/Section.astro';
+import CtaBand from '../components/CtaBand.astro';
+import CompanyRecord from '../components/CompanyRecord.astro';
+import Icon from '../components/Icon.astro';
+import { about } from '../data/content';
+import { isSet } from '../lib/utils';
+import { hasCompanyRecord } from '../lib/data';
+
+const t = about;
+const paragraphs = t.story.paragraphs.filter((p) => isSet(p));
+const values = t.values.items.filter((v) => isSet(v.title) && isSet(v.text));
+---
+
+<Base title={t.seo.title} description={t.seo.description} path="/about">
+  <section class="section section--tight hero" aria-labelledby="hero-title">
+    <div class="container">
+      <div class="stack stack--m measure">
+        <p class="eyebrow animate-fade-up">{t.hero.eyebrow}</p>
+        <h1 id="hero-title" class="display animate-fade-up delay-1">
+          {t.hero.titleLead}<br /><span class="mark">{t.hero.titleMark}</span>
+        </h1>
+        <p class="lead animate-fade-up delay-2">{t.hero.lead}</p>
+      </div>
+    </div>
+  </section>
+
+  {
+    paragraphs.length > 0 && (
+      <Section id="how-we-work" rule title={t.story.title} subtitle={t.story.subtitle} width="narrow">
+        <div class="prose reveal">
+          {paragraphs.map((p) => <p>{p}</p>)}
+        </div>
+      </Section>
+    )
+  }
+
+  {
+    values.length > 0 && (
+      <Section id="values" variant="alt" title={t.values.title}>
+        <ul class="grid grid--4 grid--gap-s list-reset">
+          {values.map((value, i) => (
+            <li class="card card--hover reveal" style={`--reveal-delay: ${i * 90}ms`}>
+              <span class="icon-badge"><Icon name={value.icon} /></span>
+              <h3 class="card__title">{value.title}</h3>
+              <p class="card__text">{value.text}</p>
+            </li>
+          ))}
+        </ul>
+      </Section>
+    )
+  }
+
+  {
+    hasCompanyRecord && (
+      <Section id="company" rule eyebrow={t.record.eyebrow} title={t.record.title} subtitle={t.record.subtitle}>
+        <div class="reveal">
+          <CompanyRecord />
+        </div>
+      </Section>
+    )
+  }
+
+  <CtaBand
+    eyebrow={t.cta.eyebrow}
+    title={t.cta.title}
+    lead={t.cta.lead}
+    primaryHref="/contact"
+    secondaryLabel={t.cta.secondaryCta}
+    secondaryHref="/services"
+  />
+</Base>
